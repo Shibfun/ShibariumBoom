@@ -1,0 +1,866 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BOOM Staking & Voting</title>
+    <link rel="icon" type="image/png" href="https://shibarium.fun/images/favicon.png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #121212;
+            color: #E0E0E0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 16px;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+        .header h1 {
+            font-size: clamp(2em, 5vw, 2.5em);
+            font-weight: 700;
+            color: #FF8C00;
+            letter-spacing: 1px;
+        }
+        .connect-section {
+            margin-bottom: 16px;
+        }
+        .connect-section button {
+            padding: 10px 24px;
+            background: linear-gradient(45deg, #FF8C00, #FFA500);
+            color: #FFF;
+            border: none;
+            border-radius: 24px;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 1em;
+            transition: transform 0.2s, background 0.3s;
+        }
+        .connect-section button:hover {
+            transform: scale(1.05);
+            background: linear-gradient(45deg, #FFA500, #FF8C00);
+        }
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 24px;
+            justify-content: center;
+        }
+        .card {
+            background: #1E1E1E;
+            border: 1px solid #333;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 500px;
+            display: flex;
+            flex-direction: column;
+        }
+        .card-header {
+            display: flex;
+            align-items: center;
+            padding: 16px;
+            background: #252525;
+            border-bottom: 1px solid #333;
+        }
+        .card-header h3 {
+            font-size: 1.1em;
+            font-weight: 600;
+            flex-grow: 1;
+            color: #E0E0E0;
+        }
+        .card-header .copy-button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 6px;
+            position: relative;
+        }
+        .card-header .copy-button img {
+            width: 18px;
+            height: 18px;
+            filter: invert(1);
+        }
+        .card-header .copy-button .tooltip {
+            visibility: hidden;
+            background: #FF8C00;
+            color: #FFF;
+            font-size: 0.8em;
+            padding: 4px 8px;
+            border-radius: 4px;
+            position: absolute;
+            top: -30px;
+            right: 0;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+        .card-header .copy-button.copied .tooltip {
+            visibility: visible;
+            opacity: 1;
+        }
+        .card-content {
+            padding: 16px;
+            flex-grow: 1;
+        }
+        .card-content h4 {
+            font-size: 1.4em;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: #FF8C00;
+        }
+        .card-content p.description {
+            font-size: 0.9em;
+            color: #B0B0B0;
+            margin-bottom: 16px;
+            line-height: 1.5;
+        }
+        .card-content .info {
+            font-size: 0.85em;
+            color: #E0E0E0;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .card-content .info img {
+            width: 16px;
+            height: 16px;
+            filter: invert(1);
+        }
+        .card-content .info a {
+            color: #FF8C00;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        .card-content .info a:hover {
+            color: #FFA500;
+        }
+        .action-section {
+            padding: 16px;
+            border-top: 1px solid #333;
+        }
+        .action-box {
+            background: #252525;
+            padding: 16px;
+            border-radius: 12px;
+        }
+        .select-box {
+            margin-bottom: 12px;
+        }
+        .select-box select {
+            width: 100%;
+            padding: 10px;
+            background: #1E1E1E;
+            border: 1px solid #333;
+            border-radius: 8px;
+            color: #E0E0E0;
+            font-size: 0.9em;
+            outline: none;
+        }
+        .balance-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85em;
+            margin-bottom: 8px;
+            color: #FF8C00;
+        }
+        .token-info {
+            display: flex;
+            align-items: center;
+            padding: 8px;
+            background: #1E1E1E;
+            border-radius: 8px;
+            margin-bottom: 8px;
+        }
+        .token-info img {
+            width: 20px;
+            height: 20px;
+            margin-right: 8px;
+        }
+        .token-info span {
+            font-size: 0.9em;
+            color: #E0E0E0;
+        }
+        .action-box input {
+            width: 100%;
+            padding: 10px;
+            background: #1E1E1E;
+            border: 1px solid #333;
+            border-radius: 8px;
+            color: #E0E0E0;
+            font-size: 0.9em;
+            text-align: right;
+            outline: none;
+        }
+        .percentage-buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+            margin: 8px 0;
+        }
+        .percentage-buttons button {
+            padding: 0;
+            background: #333;
+            border: 1px solid #444;
+            border-radius: 8px;
+            cursor: pointer;
+            color: #E0E0E0;
+            font-size: 0.85em;
+            font-weight: 600;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+        .percentage-buttons button:hover {
+            background: #FF8C00;
+            color: #FFF;
+            transform: scale(1.05);
+        }
+        .percentage-buttons button.active {
+            background: linear-gradient(45deg, #FF8C00, #FFA500);
+            color: #FFF;
+            border-color: #FF8C00;
+        }
+        .action-box .action-button {
+            padding: 10px;
+            background: linear-gradient(45deg, #FF8C00, #FFA500);
+            color: #FFF;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            width: 100%;
+            font-size: 0.9em;
+            position: relative;
+            transition: background 0.3s;
+        }
+        .action-box .action-button:disabled {
+            background: #555;
+            cursor: not-allowed;
+        }
+        .action-box .action-button:hover:not(:disabled) {
+            background: linear-gradient(45deg, #FFA500, #FF8C00);
+        }
+        .action-box .action-button .spinner {
+            display: none;
+            border: 2px solid #FFF;
+            border-top: 2px solid transparent;
+            border-radius: 50%;
+            width: 16px;
+            height: 16px;
+            animation: spin 1s linear infinite;
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+        .action-box .action-button.loading .spinner {
+            display: block;
+        }
+        .node-info {
+            margin-top: 16px;
+        }
+        .node-info table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85em;
+            color: #E0E0E0;
+        }
+        .node-info th, .node-info td {
+            padding: 8px;
+            border: 1px solid #333;
+            text-align: left;
+        }
+        .node-info th {
+            background: #252525;
+            color: #FF8C00;
+        }
+        .global-spinner {
+            border: 4px solid #FF8C00;
+            border-top: 4px solid transparent;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 24px auto;
+            display: none;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .status {
+            font-size: 0.9em;
+            color: #FF8C00;
+            text-align: center;
+            margin: 12px 0;
+        }
+        .footer {
+            font-size: 0.8em;
+            color: #B0B0B0;
+            text-align: center;
+            margin-top: auto;
+            padding: 16px;
+        }
+        .footer a {
+            color: #FF8C00;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        .footer a:hover {
+            color: #FFA500;
+        }
+        @media (max-width: 768px) {
+            body {
+                padding: 12px;
+            }
+            .header h1 {
+                font-size: 1.8em;
+            }
+            .card {
+                max-width: 100%;
+            }
+            .card-header h3 {
+                font-size: 1em;
+            }
+            .card-content h4 {
+                font-size: 1.2em;
+            }
+            .card-content p.description {
+                font-size: 0.85em;
+            }
+            .percentage-buttons {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>BOOM Staking & Voting</h1>
+    </div>
+    <div class="connect-section">
+        <button id="connectWalletButton">Connect Wallet</button>
+    </div>
+    <div id="searchStatus" class="status"></div>
+    <div class="global-spinner" id="globalSpinner"></div>
+    <div class="container">
+        <div class="card" id="actionCard"></div>
+    </div>
+    <div class="footer">
+        Powered by <a href="https://shibarium.shib.io/" target="_blank">Shibarium</a> | ShibClub © 2025
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/web3@1.7.0/dist/web3.min.js"></script>
+    <script>
+        let web3, account;
+        const contractAddress = "0x647BD36AECe2F3C11082c568fC38d20619F91Ee0";
+        const shibarium = {
+            chainId: "0x6d",
+            chainName: "Shibarium",
+            nativeCurrency: { name: "BONE", symbol: "BONE", decimals: 18 },
+            rpcUrls: ["https://rpc.shibrpc.com", "https://www.shibrpc.com"],
+            blockExplorerUrls: ["https://shibariumscan.io"]
+        };
+        const contractAbi = [
+            {"inputs":[{"internalType":"address","name":"account","type":"address"}],"name":"balanceOf","outputs":[{"internalType":"uint256","name":"amount","type":"uint256"}],"stateMutability":"view","type":"function"},
+            {"inputs":[{"internalType":"address","name":"spender","type":"address"},{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"approve","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},
+            {"inputs":[{"internalType":"address","name":"lpToken","type":"address"},{"internalType":"uint256","name":"_amount","type":"uint256"}],"name":"stakeLP","outputs":[],"stateMutability":"nonpayable","type":"function"},
+            {"inputs":[{"internalType":"address","name":"lpToken","type":"address"}],"name":"unstakeLP","outputs":[],"stateMutability":"nonpayable","type":"function"},
+            {"inputs":[{"internalType":"address","name":"lpToken","type":"address"},{"internalType":"uint256","name":"_amount","type":"uint256"}],"name":"vote","outputs":[],"stateMutability":"nonpayable","type":"function"},
+            {"inputs":[{"internalType":"address","name":"lpToken","type":"address"}],"name":"cancelVote","outputs":[],"stateMutability":"nonpayable","type":"function"},
+            {"inputs":[],"name":"claimRewards","outputs":[],"stateMutability":"nonpayable","type":"function"},
+            {"inputs":[{"internalType":"address","name":"lpToken","type":"address"}],"name":"getNodeVotes","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
+            {"inputs":[{"internalType":"address","name":"lpToken","type":"address"}],"name":"getRewardPerUnitPerBlock","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
+            {"inputs":[{"internalType":"address","name":"_user","type":"address"}],"name":"getUserStake","outputs":[{"internalType":"address[]","name":"tokens","type":"address[]"},{"internalType":"uint256[]","name":"amounts","type":"uint256[]"},{"internalType":"uint256","name":"userStartBlock","type":"uint256"},{"internalType":"uint256","name":"totalReward","type":"uint256"}],"stateMutability":"view","type":"function"}
+        ];
+        const nodes = [
+            { name: "FEED", address: "0xD4301bA08076C14Dfc93fd0a94151E338874D7FE" },
+            { name: "CHIKA", address: "0x4930Ba3d49d277e7832a7Eb33E56B2C2fA8Bd15a" },
+            { name: "WOW", address: "0x85F893b08718C735b71069020a33C2beAFF3cA7C" },
+            { name: "TOYS", address: "0x0518642FD7E7d43555B6D094aC23BE60856F6e56" },
+            { name: "NEKO", address: "0x078Af49C3242A6815b103AB6c089662E1A067150" },
+            { name: "CANNED", address: "0xC2Cf32cDf6Fa7Df6E2920E4C864F19D326FA0d67" },
+            { name: "USAGI", address: "0xAc8c7ac9431d5f48918aC8FA6a231540818EC1aA" },
+            { name: "MSGA", address: "0x863e45b761003E4c95E90971E3ef994ee19Faf63" },
+            { name: "NONE", address: "0xBa6C89E95a9ADc069Ce808Bca5D544F1afb6F720" },
+            { name: "LUISA", address: "0x95e48cee32dBcEF91Fb99Db4c1Af3Ba7Ef798CB5" },
+            { name: "DAMN", address: "0x615B17bD8dB63Baf64025Dc070B54EdcEca7A123" },
+            { name: "WOOF", address: "0xE7481D3BB7ae1f11E17D64244102044922Cf565F" },
+            { name: "SHIPA", address: "0xBd46DAFD4613B22A8ea84C4Af1B283C0387ACE8a" },
+            { name: "PIKA", address: "0x42C75D4f7518e91B78b7d27898562D38E726f61D" },
+            { name: "DUDU", address: "0xe5b06461c770Bc7b7eDFe49A16512cE5fCe54A90" },
+            { name: "SHY", address: "0x440470083719BDB64d0bE5C6DC37452eecf33aC0" },
+            { name: "SHIBS", address: "0xcC4202C10001346397Fa88C27ADB66b8C27a81F2" }
+        ];
+        const tokenLogo = "https://woofswap.finance/image/tokens/BOOM.png";
+        const maxAllowance = "115792089237316195423570985008687907853269984665640564039457584007913129639935";
+
+        function shortenAddress(address) {
+            return address ? `${address.slice(0, 6)}...${address.slice(-4)}` : "0x...";
+        }
+
+        function showStatus(message) {
+            const status = document.getElementById("searchStatus");
+            status.innerText = message;
+            setTimeout(() => { status.innerText = ""; }, 5000);
+        }
+
+        async function tryInitializeWeb3() {
+            for (const rpc of shibarium.rpcUrls) {
+                try {
+                    web3 = new Web3(rpc);
+                    await web3.eth.getBlockNumber();
+                    return true;
+                } catch (e) {
+                    console.warn(`RPC ${rpc} failed: ${e.message}`);
+                }
+            }
+            return false;
+        }
+
+        async function connectWallet() {
+            const status = document.getElementById("searchStatus");
+            try {
+                if (!window.ethereum) {
+                    showStatus("Please install MetaMask.");
+                    return;
+                }
+                status.innerText = "Connecting...";
+                document.getElementById("globalSpinner").style.display = "block";
+                web3 = new Web3(window.ethereum);
+                const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
+                if (!accounts.length) {
+                    showStatus("Please unlock wallet.");
+                    return;
+                }
+                account = accounts[0];
+                const chainId = await web3.eth.getChainId();
+                if (Number(chainId) !== 109) {
+                    try {
+                        await window.ethereum.request({ method: "wallet_switchEthereumChain", params: [{ chainId: shibarium.chainId }] });
+                    } catch (switchError) {
+                        if (switchError.code === 4902) {
+                            await window.ethereum.request({ method: "wallet_addEthereumChain", params: [shibarium] });
+                        } else {
+                            throw switchError;
+                        }
+                    }
+                }
+                document.getElementById("connectWalletButton").innerText = shortenAddress(account);
+                showStatus("Connected to Shibarium");
+                await loadActionCard();
+            } catch (error) {
+                showStatus(`Connection failed: ${error.message}`);
+                resetUI();
+            } finally {
+                document.getElementById("globalSpinner").style.display = "none";
+            }
+        }
+
+        function resetUI() {
+            document.getElementById("connectWalletButton").innerText = "Connect Wallet";
+            document.getElementById("searchStatus").innerText = "";
+            const actionButton = document.querySelector(".action-button");
+            if (actionButton) actionButton.disabled = true;
+        }
+
+        async function loadActionCard() {
+            const status = document.getElementById("searchStatus");
+            const card = document.getElementById("actionCard");
+            const spinner = document.getElementById("globalSpinner");
+            try {
+                status.innerText = "Loading...";
+                spinner.style.display = "block";
+                if (!web3 && !await tryInitializeWeb3()) {
+                    showStatus("Failed to connect to Shibarium.");
+                    return;
+                }
+                const contract = new web3.eth.Contract(contractAbi, contractAddress);
+                let tokenBalance = "0";
+                let userStakes = { tokens: [], amounts: [], totalReward: "0" };
+                if (account) {
+                    tokenBalance = await contract.methods.balanceOf(account).call();
+                    const stakeData = await contract.methods.getUserStake(account).call();
+                    userStakes = {
+                        tokens: stakeData.tokens,
+                        amounts: stakeData.amounts,
+                        totalReward: stakeData.totalReward
+                    };
+                }
+                const nodeData = await Promise.all(nodes.map(async node => {
+                    const votes = await contract.methods.getNodeVotes(node.address).call();
+                    const reward = await contract.methods.getRewardPerUnitPerBlock(node.address).call();
+                    return { name: node.name, votes, reward };
+                }));
+                const tokenBalanceDisplay = account ? parseFloat(web3.utils.fromWei(tokenBalance, "ether")).toFixed(2) : "0";
+                const pendingRewards = account ? parseFloat(web3.utils.fromWei(userStakes.totalReward, "ether")).toFixed(2) : "0";
+                card.dataset.tokenBalance = tokenBalance;
+                let stakeOptions = nodes.map(node => `<option value="${node.address}">${node.name}</option>`).join("");
+                let nodeTable = nodeData.map(node => `
+                    <tr>
+                        <td>${node.name}</td>
+                        <td>${parseFloat(web3.utils.fromWei(node.votes, "ether")).toFixed(2)}</td>
+                        <td>${parseFloat(web3.utils.fromWei(node.reward, "ether")).toFixed(2)}</td>
+                    </tr>
+                `).join("");
+                let userStakesHtml = userStakes.tokens.length ? userStakes.tokens.map((token, i) => {
+                    const node = nodes.find(n => n.address.toLowerCase() === token.toLowerCase());
+                    return `<option value="${token}">${node.name}: ${parseFloat(web3.utils.fromWei(userStakes.amounts[i], "ether")).toFixed(2)}</option>`;
+                }).join("") : '<option value="">No stakes</option>';
+                card.innerHTML = `
+                    <div class="card-header">
+                        <h3>BOOM Contract</h3>
+                        <button class="copy-button" data-address="${contractAddress}">
+                            <img src="https://img.icons8.com/ios-filled/16/000000/contract.png" alt="Copy Contract">
+                            <span class="tooltip">Copied Contract!</span>
+                        </button>
+                    </div>
+                    <div class="card-content">
+                        <h4>BOOM Staking & Voting</h4>
+                        <p class="description">Stake LP tokens, vote for nodes, and earn rewards on Shibarium.</p>
+                        <div class="info">
+                            <img src="https://img.icons8.com/ios-filled/16/000000/link.png" alt="Website">
+                            <a href="https://shib.club/" target="_blank">shib.club</a>
+                        </div>
+                        <div class="info">
+                            <img src="https://img.icons8.com/ios-filled/16/000000/twitter.png" alt="Twitter">
+                            <a href="https://x.com/woofswap" target="_blank">@woofswap</a>
+                        </div>
+                        <div class="info">
+                            <img src="https://img.icons8.com/ios-filled/16/000000/telegram-app.png" alt="Telegram">
+                            <a href="https://t.me/ShibariumSRC20" target="_blank">ShibariumSRC20</a>
+                        </div>
+                    </div>
+                    <div class="action-section">
+                        <div class="action-box">
+                            <div class="select-box">
+                                <select id="stakeToken">
+                                    ${stakeOptions}
+                                </select>
+                            </div>
+                            <div class="balance-row">
+                                <span>BOOM</span>
+                                <span>Balance: ${tokenBalanceDisplay}</span>
+                            </div>
+                            <div class="token-info">
+                                <img src="${tokenLogo}" alt="BOOM">
+                                <span>BOOM</span>
+                            </div>
+                            <input type="number" id="stakeAmount" class="amount-input" placeholder="0.0" step="0.01">
+                            <div class="percentage-buttons" id="stakePercentages">
+                                <button data-percentage="25">25%</button>
+                                <button data-percentage="50">50%</button>
+                                <button data-percentage="75">75%</button>
+                                <button data-percentage="100">MAX</button>
+                            </div>
+                            <button class="action-button" id="stakeButton" disabled>Stake</button>
+                            <div class="select-box" style="margin-top: 12px;">
+                                <select id="unstakeToken">
+                                    ${userStakesHtml}
+                                </select>
+                            </div>
+                            <button class="action-button" id="unstakeButton" ${userStakes.tokens.length ? '' : 'disabled'}>Unstake</button>
+                            <div class="select-box" style="margin-top: 12px;">
+                                <select id="voteToken">
+                                    ${stakeOptions}
+                                </select>
+                            </div>
+                            <input type="number" id="voteAmount" class="amount-input" placeholder="0.0" step="1">
+                            <div class="percentage-buttons" id="votePercentages">
+                                <button data-percentage="25">25%</button>
+                                <button data-percentage="50">50%</button>
+                                <button data-percentage="75">75%</button>
+                                <button data-percentage="100">MAX</button>
+                            </div>
+                            <button class="action-button" id="voteButton" disabled>Vote</button>
+                            <div class="select-box" style="margin-top: 12px;">
+                                <select id="cancelVoteToken">
+                                    ${stakeOptions}
+                                </select>
+                            </div>
+                            <button class="action-button" id="cancelVoteButton">Cancel Vote</button>
+                            <button class="action-button" id="claimRewardsButton" style="margin-top: 12px;" ${pendingRewards > 0 ? '' : 'disabled'}>Claim Rewards (${pendingRewards})</button>
+                        </div>
+                        <div class="node-info">
+                            <h4>Node Information</h4>
+                            <table>
+                                <tr>
+                                    <th>Node</th>
+                                    <th>Votes (BOOM)</th>
+                                    <th>Reward/Block</th>
+                                </tr>
+                                ${nodeTable}
+                            </table>
+                        </div>
+                    </div>
+                `;
+                setupCardListeners(card, contract);
+                showStatus("");
+            } catch (error) {
+                showStatus(`Failed to load: ${error.message}`);
+            } finally {
+                spinner.style.display = "none";
+            }
+        }
+
+        function setupCardListeners(card, contract) {
+            card.querySelectorAll(".copy-button").forEach(button => {
+                button.addEventListener("click", () => {
+                    navigator.clipboard.writeText(button.dataset.address).then(() => {
+                        button.classList.add("copied");
+                        setTimeout(() => button.classList.remove("copied"), 1000);
+                    }).catch(() => {
+                        showStatus("Failed to copy address.");
+                    });
+                });
+            });
+
+            const stakeInput = card.querySelector("#stakeAmount");
+            const voteInput = card.querySelector("#voteAmount");
+            const stakeButton = card.querySelector("#stakeButton");
+            const unstakeButton = card.querySelector("#unstakeButton");
+            const voteButton = card.querySelector("#voteButton");
+            const cancelVoteButton = card.querySelector("#cancelVoteButton");
+            const claimRewardsButton = card.querySelector("#claimRewardsButton");
+
+            stakeInput.addEventListener("input", () => {
+                const amount = parseFloat(stakeInput.value);
+                stakeButton.disabled = !account || !amount || amount <= 0;
+            });
+
+            voteInput.addEventListener("input", () => {
+                const amount = parseFloat(voteInput.value);
+                voteButton.disabled = !account || !amount || amount < 1 || amount % 1 !== 0;
+            });
+
+            card.querySelectorAll("#stakePercentages button").forEach(button => {
+                button.addEventListener("click", () => {
+                    card.querySelectorAll("#stakePercentages button").forEach(btn => btn.classList.remove("active"));
+                    button.classList.add("active");
+                    setAmount(card, button.dataset.percentage, "stake");
+                });
+            });
+
+            card.querySelectorAll("#votePercentages button").forEach(button => {
+                button.addEventListener("click", () => {
+                    card.querySelectorAll("#votePercentages button").forEach(btn => btn.classList.remove("active"));
+                    button.classList.add("active");
+                    setAmount(card, button.dataset.percentage, "vote");
+                });
+            });
+
+            stakeButton.addEventListener("click", async () => {
+                await stakeLP(card, contract);
+            });
+
+            unstakeButton.addEventListener("click", async () => {
+                await unstakeLP(card, contract);
+            });
+
+            voteButton.addEventListener("click", async () => {
+                await vote(card, contract);
+            });
+
+            cancelVoteButton.addEventListener("click", async () => {
+                await cancelVote(card, contract);
+            });
+
+            claimRewardsButton.addEventListener("click", async () => {
+                await claimRewards(card, contract);
+            });
+        }
+
+        async function setAmount(card, percentage, type) {
+            if (!web3 || !account) {
+                showStatus("Please connect wallet.");
+                return;
+            }
+            const input = card.querySelector(`#${type}Amount`);
+            const balance = parseFloat(web3.utils.fromWei(card.dataset.tokenBalance, "ether"));
+            let amount = percentage === "100" ? Math.max(0, balance - 0.01) : balance * (percentage / 100);
+            if (type === "vote") amount = Math.floor(amount);
+            input.value = amount.toFixed(type === "vote" ? 0 : 4);
+            const button = card.querySelector(`#${type}Button`);
+            button.disabled = !account || !amount || (type === "vote" && (amount < 1 || amount % 1 !== 0));
+        }
+
+        async function stakeLP(card, contract) {
+            if (!web3 || !account) {
+                showStatus("Please connect wallet.");
+                return;
+            }
+            const token = card.querySelector("#stakeToken").value;
+            const amount = card.querySelector("#stakeAmount").value;
+            if (!amount || amount <= 0) {
+                showStatus("Please enter a valid amount.");
+                return;
+            }
+            let amountWei;
+            try {
+                amountWei = web3.utils.toWei(amount, "ether");
+            } catch (e) {
+                showStatus("Invalid amount entered.");
+                return;
+            }
+            const button = card.querySelector("#stakeButton");
+            try {
+                button.classList.add("loading");
+                button.disabled = true;
+                showStatus("Approving token...");
+                await contract.methods.approve(contractAddress, maxAllowance).send({ from: account });
+                showStatus("Processing stake...");
+                await contract.methods.stakeLP(token, amountWei).send({ from: account });
+                showStatus("Stake successful!");
+                await loadActionCard();
+            } catch (error) {
+                let errorMessage = error.message || "Transaction failed.";
+                if (error.code === 4001) errorMessage = "User rejected transaction.";
+                showStatus(errorMessage);
+            } finally {
+                button.classList.remove("loading");
+                button.disabled = false;
+            }
+        }
+
+        async function unstakeLP(card, contract) {
+            if (!web3 || !account) {
+                showStatus("Please connect wallet.");
+                return;
+            }
+            const token = card.querySelector("#unstakeToken").value;
+            if (!token) {
+                showStatus("No stakes to unstake.");
+                return;
+            }
+            const button = card.querySelector("#unstakeButton");
+            try {
+                button.classList.add("loading");
+                button.disabled = true;
+                showStatus("Processing unstake...");
+                await contract.methods.unstakeLP(token).send({ from: account });
+                showStatus("Unstake successful!");
+                await loadActionCard();
+            } catch (error) {
+                let errorMessage = error.message || "Transaction failed.";
+                if (error.code === 4001) errorMessage = "User rejected transaction.";
+                showStatus(errorMessage);
+            } finally {
+                button.classList.remove("loading");
+                button.disabled = false;
+            }
+        }
+
+        async function vote(card, contract) {
+            if (!web3 || !account) {
+                showStatus("Please connect wallet.");
+                return;
+            }
+            const token = card.querySelector("#voteToken").value;
+            const amount = card.querySelector("#voteAmount").value;
+            if (!amount || amount < 1 || amount % 1 !== 0) {
+                showStatus("Please enter a valid vote amount (minimum 1, whole numbers).");
+                return;
+            }
+            let amountWei;
+            try {
+                amountWei = web3.utils.toWei(amount, "ether");
+            } catch (e) {
+                showStatus("Invalid amount entered.");
+                return;
+            }
+            const button = card.querySelector("#voteButton");
+            try {
+                button.classList.add("loading");
+                button.disabled = true;
+                showStatus("Processing vote...");
+                await contract.methods.vote(token, amountWei).send({ from: account });
+                showStatus("Vote successful!");
+                await loadActionCard();
+            } catch (error) {
+                let errorMessage = error.message || "Transaction failed.";
+                if (error.code === 4001) errorMessage = "User rejected transaction.";
+                showStatus(errorMessage);
+            } finally {
+                button.classList.remove("loading");
+                button.disabled = false;
+            }
+        }
+
+        async function cancelVote(card, contract) {
+            if (!web3 || !account) {
+                showStatus("Please connect wallet.");
+                return;
+            }
+            const token = card.querySelector("#cancelVoteToken").value;
+            const button = card.querySelector("#cancelVoteButton");
+            try {
+                button.classList.add("loading");
+                button.disabled = true;
+                showStatus("Processing vote cancellation...");
+                await contract.methods.cancelVote(token).send({ from: account });
+                showStatus("Vote cancellation successful!");
+                await loadActionCard();
+            } catch (error) {
+                let errorMessage = error.message || "Transaction failed.";
+                if (error.code === 4001) errorMessage = "User rejected transaction.";
+                showStatus(errorMessage);
+            } finally {
+                button.classList.remove("loading");
+                button.disabled = false;
+            }
+        }
+
+        async function claimRewards(card, contract) {
+            if (!web3 || !account) {
+                showStatus("Please connect wallet.");
+                return;
+            }
+            const button = card.querySelector("#claimRewardsButton");
+            try {
+                button.classList.add("loading");
+                button.disabled = true;
+                showStatus("Processing reward claim...");
+                await contract.methods.claimRewards().send({ from: account });
+                showStatus("Rewards claimed successfully!");
+                await loadActionCard();
+            } catch (error) {
+                let errorMessage = error.message || "Transaction failed.";
+                if (error.code === 4001) errorMessage = "User rejected transaction.";
+                showStatus(errorMessage);
+            } finally {
+                button.classList.remove("loading");
+                button.disabled = false;
+            }
+        }
+
+        document.getElementById("connectWalletButton").addEventListener("click", connectWallet);
+        window.addEventListener("load", async () => {
+            if (!window.location.protocol.includes("http")) {
+                showStatus('Please run via server (e.g., "npx serve").');
+                return;
+            }
+            if (await tryInitializeWeb3()) {
+                loadActionCard();
+            } else {
+                showStatus("Failed to connect to Shibarium.");
+            }
+        });
+    </script>
+</body>
+</html>
