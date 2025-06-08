@@ -156,6 +156,13 @@
             background: #252525;
             padding: 16px;
             border-radius: 12px;
+            margin-bottom: 16px;
+        }
+        .action-box h5 {
+            font-size: 1.1em;
+            font-weight: 600;
+            color: #FF8C00;
+            margin-bottom: 12px;
         }
         .select-box {
             margin-bottom: 12px;
@@ -387,7 +394,13 @@
             {"inputs":[],"name":"claimRewards","outputs":[],"stateMutability":"nonpayable","type":"function"},
             {"inputs":[{"internalType":"address","name":"lpToken","type":"address"}],"name":"getNodeVotes","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
             {"inputs":[{"internalType":"address","name":"lpToken","type":"address"}],"name":"getRewardPerUnitPerBlock","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
-            {"inputs":[{"internalType":"address","name":"_user","type":"address"}],"name":"getUserStake","outputs":[{"internalType":"address[]","name":"tokens","type":"address[]"},{"internalType":"uint256[]","name":"amounts","type":"uint256[]"},{"internalType":"uint256","name":"userStartBlock","type":"uint256"},{"internalType":"uint256","name":"totalReward","type":"uint256"}],"stateMutability":"view","type":"function"}
+            {"inputs":[{"internalType":"address","name":"_user","type":"address"}],"name":"getUserStake","outputs":[{"internalType":"address[]","name":"tokens","type":"address[]"},{"internalType":"uint256[]","name":"amounts","type":"uint256[]"},{"internalType":"uint256","name":"userStartBlock","type":"uint256"},{"internalType":"uint256","name":"totalReward","type":"uint256"}],"stateMutability":"view","type":"function"},
+            {"inputs":[{"internalType":"address","name":"owner","type":"address"},{"internalType":"address","name":"spender","type":"address"}],"name":"allowance","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"}
+        ];
+        const erc20Abi = [
+            {"inputs":[{"internalType":"address","name":"account","type":"address"}],"name":"balanceOf","outputs":[{"internalType":"uint256","name":"amount","type":"uint256"}],"stateMutability":"view","type":"function"},
+            {"inputs":[{"internalType":"address","name":"spender","type":"address"},{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"approve","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},
+            {"inputs":[{"internalType":"address","name":"owner","type":"address"},{"internalType":"address","name":"spender","type":"address"}],"name":"allowance","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"}
         ];
         const nodes = [
             { name: "FEED", address: "0xD4301bA08076C14Dfc93fd0a94151E338874D7FE" },
@@ -506,7 +519,7 @@
                 const nodeData = await Promise.all(nodes.map(async node => {
                     const votes = await contract.methods.getNodeVotes(node.address).call();
                     const reward = await contract.methods.getRewardPerUnitPerBlock(node.address).call();
-                    return { name: node.name, votes, reward };
+                    return { name: node.name, votes, reward: web3.utils.fromWei(reward, "ether") };
                 }));
                 const tokenBalanceDisplay = account ? parseFloat(web3.utils.fromWei(tokenBalance, "ether")).toFixed(2) : "0";
                 const pendingRewards = account ? parseFloat(web3.utils.fromWei(userStakes.totalReward, "ether")).toFixed(2) : "0";
@@ -516,7 +529,7 @@
                     <tr>
                         <td>${node.name}</td>
                         <td>${parseFloat(web3.utils.fromWei(node.votes, "ether")).toFixed(2)}</td>
-                        <td>${parseFloat(web3.utils.fromWei(node.reward, "ether")).toFixed(2)}</td>
+                        <td>${parseFloat(node.reward).toFixed(2)}</td>
                     </tr>
                 `).join("");
                 let userStakesHtml = userStakes.tokens.length ? userStakes.tokens.map((token, i) => {
@@ -549,18 +562,19 @@
                     </div>
                     <div class="action-section">
                         <div class="action-box">
+                            <h5>Stake / Unstake</h5>
                             <div class="select-box">
                                 <select id="stakeToken">
                                     ${stakeOptions}
                                 </select>
                             </div>
                             <div class="balance-row">
-                                <span>BOOM</span>
-                                <span>Balance: ${tokenBalanceDisplay}</span>
+                                <span>LP Token</span>
+                                <span id="lpBalance">Balance: 0</span>
                             </div>
                             <div class="token-info">
-                                <img src="${tokenLogo}" alt="BOOM">
-                                <span>BOOM</span>
+                                <img src="${tokenLogo}" alt="LP">
+                                <span id="lpSymbol">LP Token</span>
                             </div>
                             <input type="number" id="stakeAmount" class="amount-input" placeholder="0.0" step="0.01">
                             <div class="percentage-buttons" id="stakePercentages">
@@ -576,10 +590,21 @@
                                 </select>
                             </div>
                             <button class="action-button" id="unstakeButton" ${userStakes.tokens.length ? '' : 'disabled'}>Unstake</button>
-                            <div class="select-box" style="margin-top: 12px;">
+                        </div>
+                        <div class="action-box">
+                            <h5>Vote / Cancel Vote</h5>
+                            <div class="select-box">
                                 <select id="voteToken">
                                     ${stakeOptions}
                                 </select>
+                            </div>
+                            <div class="balance-row">
+                                <span>BOOM</span>
+                                <span>Balance: ${tokenBalanceDisplay}</span>
+                            </div>
+                            <div class="token-info">
+                                <img src="${tokenLogo}" alt="BOOM">
+                                <span>BOOM</span>
                             </div>
                             <input type="number" id="voteAmount" class="amount-input" placeholder="0.0" step="1">
                             <div class="percentage-buttons" id="votePercentages">
@@ -595,7 +620,10 @@
                                 </select>
                             </div>
                             <button class="action-button" id="cancelVoteButton">Cancel Vote</button>
-                            <button class="action-button" id="claimRewardsButton" style="margin-top: 12px;" ${pendingRewards > 0 ? '' : 'disabled'}>Claim Rewards (${pendingRewards})</button>
+                        </div>
+                        <div class="action-box">
+                            <h5>Rewards</h5>
+                            <button class="action-button" id="claimRewardsButton" ${pendingRewards > 0 ? '' : 'disabled'}>Claim Rewards (${pendingRewards})</button>
                         </div>
                         <div class="node-info">
                             <h4>Node Information</h4>
@@ -611,12 +639,23 @@
                     </div>
                 `;
                 setupCardListeners(card, contract);
+                await updateLPBalance(card, contract);
                 showStatus("");
             } catch (error) {
                 showStatus(`Failed to load: ${error.message}`);
             } finally {
                 spinner.style.display = "none";
             }
+        }
+
+        async function updateLPBalance(card, contract) {
+            if (!account) return;
+            const token = card.querySelector("#stakeToken").value;
+            const tokenContract = new web3.eth.Contract(erc20Abi, token);
+            const balance = await tokenContract.methods.balanceOf(account).call();
+            const node = nodes.find(n => n.address.toLowerCase() === token.toLowerCase());
+            card.querySelector("#lpBalance").innerText = `Balance: ${parseFloat(web3.utils.fromWei(balance, "ether")).toFixed(2)}`;
+            card.querySelector("#lpSymbol").innerText = node.name;
         }
 
         function setupCardListeners(card, contract) {
@@ -638,6 +677,9 @@
             const voteButton = card.querySelector("#voteButton");
             const cancelVoteButton = card.querySelector("#cancelVoteButton");
             const claimRewardsButton = card.querySelector("#claimRewardsButton");
+            const stakeTokenSelect = card.querySelector("#stakeToken");
+
+            stakeTokenSelect.addEventListener("change", () => updateLPBalance(card, contract));
 
             stakeInput.addEventListener("input", () => {
                 const amount = parseFloat(stakeInput.value);
@@ -692,7 +734,14 @@
                 return;
             }
             const input = card.querySelector(`#${type}Amount`);
-            const balance = parseFloat(web3.utils.fromWei(card.dataset.tokenBalance, "ether"));
+            let balance;
+            if (type === "stake") {
+                const token = card.querySelector("#stakeToken").value;
+                const tokenContract = new web3.eth.Contract(erc20Abi, token);
+                balance = parseFloat(web3.utils.fromWei(await tokenContract.methods.balanceOf(account).call(), "ether"));
+            } else {
+                balance = parseFloat(web3.utils.fromWei(card.dataset.tokenBalance, "ether"));
+            }
             let amount = percentage === "100" ? Math.max(0, balance - 0.01) : balance * (percentage / 100);
             if (type === "vote") amount = Math.floor(amount);
             input.value = amount.toFixed(type === "vote" ? 0 : 4);
@@ -718,12 +767,21 @@
                 showStatus("Invalid amount entered.");
                 return;
             }
+            const tokenContract = new web3.eth.Contract(erc20Abi, token);
+            const balance = await tokenContract.methods.balanceOf(account).call();
+            if (web3.utils.toBN(balance).lt(web3.utils.toBN(amountWei))) {
+                showStatus("Insufficient LP token balance.");
+                return;
+            }
+            const allowance = await tokenContract.methods.allowance(account, contractAddress).call();
             const button = card.querySelector("#stakeButton");
             try {
                 button.classList.add("loading");
                 button.disabled = true;
-                showStatus("Approving token...");
-                await contract.methods.approve(contractAddress, maxAllowance).send({ from: account });
+                if (web3.utils.toBN(allowance).lt(web3.utils.toBN(amountWei))) {
+                    showStatus("Approving LP token...");
+                    await tokenContract.methods.approve(contractAddress, maxAllowance).send({ from: account });
+                }
                 showStatus("Processing stake...");
                 await contract.methods.stakeLP(token, amountWei).send({ from: account });
                 showStatus("Stake successful!");
@@ -782,6 +840,11 @@
                 amountWei = web3.utils.toWei(amount, "ether");
             } catch (e) {
                 showStatus("Invalid amount entered.");
+                return;
+            }
+            const balance = await contract.methods.balanceOf(account).call();
+            if (web3.utils.toBN(balance).lt(web3.utils.toBN(amountWei))) {
+                showStatus("Insufficient BOOM balance.");
                 return;
             }
             const button = card.querySelector("#voteButton");
@@ -856,7 +919,7 @@
                 return;
             }
             if (await tryInitializeWeb3()) {
-                loadActionCard();
+                await loadActionCard();
             } else {
                 showStatus("Failed to connect to Shibarium.");
             }
