@@ -375,7 +375,7 @@
     <script src="https://cdn.jsdelivr.net/npm/web3@1.7.0/dist/web3.min.js"></script>
     <script>
         let web3, account;
-        const contractAddress = "0x647BD36AECe2F3C11082c568fC38d20619F91Ee0";
+        const contractAddress = "0xBD806e0604A269be00D42e74C8Ac5d245C5020a1";
         const shibarium = {
             chainId: "0x6d",
             chainName: "Shibarium",
@@ -384,8 +384,8 @@
             blockExplorerUrls: ["https://shibariumscan.io"]
         };
         const contractAbi = [
-            {"inputs":[{"internalType":"address","name":"account","type":"address"}],"name":"balanceOf","outputs":[{"internalType":"uint256","name":"amount","type":"uint256"}],"stateMutability":"view","type":"function"},
-            {"inputs":[{"internalType":"address","name":"spender","type":"address"},{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"approve","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},
+            {"inputs":[{"internalType":"address","name":"account","type":"address"}],"name":"balanceOf","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
+            {"inputs":[{"internalType":"address","name":"spender","type":"address"},{"internalType":"uint256","name":"value","type":"uint256"}],"name":"approve","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},
             {"inputs":[{"internalType":"address","name":"lpToken","type":"address"},{"internalType":"uint256","name":"_amount","type":"uint256"}],"name":"stakeLP","outputs":[],"stateMutability":"nonpayable","type":"function"},
             {"inputs":[{"internalType":"address","name":"lpToken","type":"address"}],"name":"unstakeLP","outputs":[],"stateMutability":"nonpayable","type":"function"},
             {"inputs":[{"internalType":"address","name":"lpToken","type":"address"},{"internalType":"uint256","name":"_amount","type":"uint256"}],"name":"vote","outputs":[],"stateMutability":"nonpayable","type":"function"},
@@ -397,28 +397,28 @@
             {"inputs":[{"internalType":"address","name":"owner","type":"address"},{"internalType":"address","name":"spender","type":"address"}],"name":"allowance","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"}
         ];
         const erc20Abi = [
-            {"inputs":[{"internalType":"address","name":"account","type":"address"}],"name":"balanceOf","outputs":[{"internalType":"uint256","name":"amount","type":"uint256"}],"stateMutability":"view","type":"function"},
-            {"inputs":[{"internalType":"address","name":"spender","type":"address"},{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"approve","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},
+            {"inputs":[{"internalType":"address","name":"account","type":"address"}],"name":"balanceOf","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
+            {"inputs":[{"internalType":"address","name":"spender","type":"address"},{"internalType":"uint256","name":"value","type":"uint256"}],"name":"approve","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},
             {"inputs":[{"internalType":"address","name":"owner","type":"address"},{"internalType":"address","name":"spender","type":"address"}],"name":"allowance","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"}
         ];
         const nodes = [
+            { name: "DAMN", address: "0x615B17bD8dB63Baf64025Dc070B54EdcEca7A123", logo: "https://woofswap.finance/image/tokens/DAMN.png" },
             { name: "FEED", address: "0xD4301bA08076C14Dfc93fd0a94151E338874D7FE", logo: "https://woofswap.finance/image/tokens/feed.png" },
+            { name: "WOOF", address: "0xE7481D3BB7ae1f11E17D64244102044922Cf565F", logo: "https://woofswap.finance/image/tokens/WOOF.png" },
             { name: "CHIKA", address: "0x4930Ba3d49d277e7832a7Eb33E56B2C2fA8Bd15a", logo: "https://woofswap.finance/image/tokens/ChikaLogo.png" },
             { name: "WOW", address: "0x85F893b08718C735b71069020a33C2beAFF3cA7C", logo: "https://woofswap.finance/image/tokens/wow.png" },
-            { name: "TOYS", address: "0x0518642FD7E7d43555B6D094aC23BE60856F6e56", logo: "https://woofswap.finance/image/tokens/toys.png" },
-            { name: "NEKO", address: "0x078Af49C3242A6815b103AB6c089662E1A067150", logo: "https://woofswap.finance/image/tokens/neko.png" },
-            { name: "CANNED", address: "0xC2Cf32cDf6Fa7Df6E2920E4C864F19D326FA0d67", logo: "https://woofswap.finance/image/tokens/CANNED.png" },
-            { name: "USAGI", address: "0xAc8c7ac9431d5f48918aC8FA6a231540818EC1aA", logo: "https://woofswap.finance/image/tokens/Usagi.png" },
-            { name: "MSGA", address: "0x863e45b761003E4c95E90971E3ef994ee19Faf63", logo: "https://woofswap.finance/image/tokens/msga.png" },
-            { name: "NONE", address: "0xBa6C89E95a9ADc069Ce808Bca5D544F1afb6F720", logo: "https://woofswap.finance/image/tokens/none.png" },
-            { name: "LUISA", address: "0x95e48cee32dBcEF91Fb99Db4c1Af3Ba7Ef798CB5", logo: "https://woofswap.finance/image/tokens/luisa.png" },
-            { name: "DAMN", address: "0x615B17bD8dB63Baf64025Dc070B54EdcEca7A123", logo: "https://woofswap.finance/image/tokens/DAMN.png" },
-            { name: "WOOF", address: "0xE7481D3BB7ae1f11E17D64244102044922Cf565F", logo: "https://woofswap.finance/image/tokens/WOOF.png" },
             { name: "SHIPA", address: "0xBd46DAFD4613B22A8ea84C4Af1B283C0387ACE8a", logo: "https://woofswap.finance/image/tokens/shipa.png" },
-            { name: "PIKA", address: "0x42C75D4f7518e91B78b7d27898562D38E726f61D", logo: "https://woofswap.finance/image/tokens/PIKA.png" },
-            { name: "DUDU", address: "0xe5b06461c770Bc7b7eDFe49A16512cE5fCe54A90", logo: "https://woofswap.finance/image/tokens/dudu.png" },
+            { name: "LUISA", address: "0x95e48cee32dBcEF91Fb99Db4c1Af3Ba7Ef798CB5", logo: "https://woofswap.finance/image/tokens/luisa.png" },
+            { name: "NONE", address: "0xBa6C89E95a9ADc069Ce808Bca5D544F1afb6F720", logo: "https://woofswap.finance/image/tokens/none.png" },
             { name: "SHY", address: "0x440470083719BDB64d0bE5C6DC37452eecf33aC0", logo: "https://woofswap.finance/image/tokens/guy.png" },
-            { name: "SHIBS", address: "0xcC4202C10001346397Fa88C27ADB66b8C27a81F2", logo: "https://woofswap.finance/image/tokens/shibss.png" }
+            { name: "NEKO", address: "0x078Af49C3242A6815b103AB6c089662E1A067150", logo: "https://woofswap.finance/image/tokens/neko.png" },
+            { name: "SHIBS", address: "0xcC4202C10001346397Fa88C27ADB66b8C27a81F2", logo: "https://woofswap.finance/image/tokens/shibss.png" },
+            { name: "TOYS", address: "0x0518642FD7E7d43555B6D094aC23BE60856F6e56", logo: "https://woofswap.finance/image/tokens/toys.png" },
+            { name: "USAGI", address: "0xAc8c7ac9431d5f48918aC8FA6a231540818EC1aA", logo: "https://woofswap.finance/image/tokens/Usagi.png" },
+            { name: "CANNED", address: "0xC2Cf32cDf6Fa7Df6E2920E4C864F19D326FA0d67", logo: "https://woofswap.finance/image/tokens/CANNED.png" },
+            { name: "DUDU", address: "0xe5b06461c770Bc7b7eDFe49A16512cE5fCe54A90", logo: "https://woofswap.finance/image/tokens/dudu.png" },
+            { name: "MSGA", address: "0x863e45b761003E4c95E90971E3ef994ee19Faf63", logo: "https://woofswap.finance/image/tokens/msga.png" },
+            { name: "PIKA", address: "0x42C75D4f7518e91B78b7d27898562D38E726f61D", logo: "https://woofswap.finance/image/tokens/PIKA.png" }
         ];
         const boomLogo = "https://woofswap.finance/image/tokens/boom.png";
         const maxAllowance = "115792089237316195423570985008687907853269984665640564039457584007913129639935";
@@ -515,7 +515,6 @@
                         amounts: stakeData.amounts,
                         totalReward: stakeData.totalReward
                     };
-                    // 获取用户对每个节点的投票情况
                     for (const node of nodes) {
                         const votes = await contract.methods.getNodeVotes(node.address).call();
                         userVotes[node.name] = parseFloat(web3.utils.fromWei(votes, "ether"));
