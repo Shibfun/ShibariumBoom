@@ -375,7 +375,7 @@
     <script src="https://cdn.jsdelivr.net/npm/web3@1.7.0/dist/web3.min.js"></script>
     <script>
         let web3, account;
-        const contractAddress = "0xa8831a0D394ff010cD50C041CBD6557D318B3BbE";
+        const contractAddress = "0x4c5315De1f699fC98641f9834B5415Dd6Aaf7435";
         const shibarium = {
             chainId: "0x6d",
             chainName: "Shibarium",
@@ -386,16 +386,22 @@
         const contractAbi = [
             {"inputs":[{"internalType":"address","name":"account","type":"address"}],"name":"balanceOf","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
             {"inputs":[{"internalType":"address","name":"spender","type":"address"},{"internalType":"uint256","name":"value","type":"uint256"}],"name":"approve","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},
+            {"inputs":[{"internalType":"address","name":"lpToken","type":"address"}],"name":"isValidLPToken","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"view","type":"function"},
             {"inputs":[{"internalType":"address","name":"lpToken","type":"address"},{"internalType":"uint256","name":"_amount","type":"uint256"}],"name":"stakeLP","outputs":[],"stateMutability":"nonpayable","type":"function"},
             {"inputs":[{"internalType":"address","name":"lpToken","type":"address"}],"name":"unstakeLP","outputs":[],"stateMutability":"nonpayable","type":"function"},
             {"inputs":[{"internalType":"address","name":"lpToken","type":"address"},{"internalType":"uint256","name":"_amount","type":"uint256"}],"name":"vote","outputs":[],"stateMutability":"nonpayable","type":"function"},
             {"inputs":[{"internalType":"address","name":"lpToken","type":"address"}],"name":"cancelVote","outputs":[],"stateMutability":"nonpayable","type":"function"},
             {"inputs":[],"name":"claimRewards","outputs":[],"stateMutability":"nonpayable","type":"function"},
+            {"inputs":[{"internalType":"address","name":"_user","type":"address"}],"name":"getPendingRewards","outputs":[{"internalType":"uint256","name":"totalReward","type":"uint256"}],"stateMutability":"view","type":"function"},
             {"inputs":[{"internalType":"address","name":"lpToken","type":"address"}],"name":"getNodeVotes","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
             {"inputs":[{"internalType":"address","name":"lpToken","type":"address"}],"name":"getRewardPerUnitPerBlock","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
             {"inputs":[{"internalType":"address","name":"_user","type":"address"}],"name":"getUserStake","outputs":[{"internalType":"address[]","name":"tokens","type":"address[]"},{"internalType":"uint256[]","name":"amounts","type":"uint256[]"},{"internalType":"uint256","name":"userStartBlock","type":"uint256"},{"internalType":"uint256","name":"totalReward","type":"uint256"}],"stateMutability":"view","type":"function"},
+            {"inputs":[{"internalType":"address","name":"_user","type":"address"},{"internalType":"address","name":"lpToken","type":"address"}],"name":"getUserVotes","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
+            {"inputs":[{"internalType":"address","name":"_user","type":"address"}],"name":"getUserHistory","outputs":[{"internalType":"uint256[]","name":"","type":"uint256[]"}],"stateMutability":"view","type":"function"},
+            {"inputs":[],"name":"getTotalStaked","outputs":[{"internalType":"address[]","name":"tokens","type":"address[]"},{"internalType":"uint256[]","name":"amounts","type":"uint256[]"}],"stateMutability":"view","type":"function"},
+            {"inputs":[],"name":"getRemainingRewards","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
             {"inputs":[{"internalType":"address","name":"owner","type":"address"},{"internalType":"address","name":"spender","type":"address"}],"name":"allowance","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
-            {"inputs":[{"internalType":"address","name":"_user","type":"address"},{"internalType":"address","name":"lpToken","type":"address"}],"name":"getUserVotes","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"}
+            {"inputs":[{"internalType":"address","name":"lpToken","type":"address"}],"name":"minStakeMultiple","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"}
         ];
         const erc20Abi = [
             {"inputs":[{"internalType":"address","name":"account","type":"address"}],"name":"balanceOf","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
@@ -403,23 +409,23 @@
             {"inputs":[{"internalType":"address","name":"owner","type":"address"},{"internalType":"address","name":"spender","type":"address"}],"name":"allowance","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"}
         ];
         const nodes = [
-            { name: "DAMN", address: "0x615B17bD8dB63Baf64025Dc070B54EdcEca7A123", logo: "https://woofswap.finance/image/tokens/DAMN.png" },
-            { name: "FEED", address: "0xD4301bA08076C14Dfc93fd0a94151E338874D7FE", logo: "https://woofswap.finance/image/tokens/feed.png" },
-            { name: "WOOF", address: "0xE7481D3BB7ae1f11E17D64244102044922Cf565F", logo: "https://woofswap.finance/image/tokens/WOOF.png" },
-            { name: "CHIKA", address: "0x4930Ba3d49d277e7832a7Eb33E56B2C2fA8Bd15a", logo: "https://woofswap.finance/image/tokens/ChikaLogo.png" },
-            { name: "WOW", address: "0x85F893b08718C735b71069020a33C2beAFF3cA7C", logo: "https://woofswap.finance/image/tokens/wow.png" },
-            { name: "SHIPA", address: "0xBd46DAFD4613B22A8ea84C4Af1B283C0387ACE8a", logo: "https://woofswap.finance/image/tokens/shipa.png" },
-            { name: "LUISA", address: "0x95e48cee32dBcEF91Fb99Db4c1Af3Ba7Ef798CB5", logo: "https://woofswap.finance/image/tokens/luisa.png" },
-            { name: "NONE", address: "0xBa6C89E95a9ADc069Ce808Bca5D544F1afb6F720", logo: "https://woofswap.finance/image/tokens/none.png" },
-            { name: "SHY", address: "0x440470083719BDB64d0bE5C6DC37452eecf33aC0", logo: "https://woofswap.finance/image/tokens/guy.png" },
-            { name: "NEKO", address: "0x078Af49C3242A6815b103AB6c089662E1A067150", logo: "https://woofswap.finance/image/tokens/neko.png" },
-            { name: "SHIBS", address: "0xcC4202C10001346397Fa88C27ADB66b8C27a81F2", logo: "https://woofswap.finance/image/tokens/shibss.png" },
-            { name: "TOYS", address: "0x0518642FD7E7d43555B6D094aC23BE60856F6e56", logo: "https://woofswap.finance/image/tokens/toys.png" },
-            { name: "USAGI", address: "0xAc8c7ac9431d5f48918aC8FA6a231540818EC1aA", logo: "https://woofswap.finance/image/tokens/Usagi.png" },
-            { name: "CANNED", address: "0xC2Cf32cDf6Fa7Df6E2920E4C864F19D326FA0d67", logo: "https://woofswap.finance/image/tokens/CANNED.png" },
-            { name: "DUDU", address: "0xe5b06461c770Bc7b7eDFe49A16512cE5fCe54A90", logo: "https://woofswap.finance/image/tokens/dudu.png" },
-            { name: "MSGA", address: "0x863e45b761003E4c95E90971E3ef994ee19Faf63", logo: "https://woofswap.finance/image/tokens/msga.png" },
-            { name: "PIKA", address: "0x42C75D4f7518e91B78b7d27898562D38E726f61D", logo: "https://woofswap.finance/image/tokens/PIKA.png" }
+            { name: "DAMN", address: "0x615B17bD8dB63Baf64025Dc070B54EdcEca7A123", logo: "https://woofswap.finance/image/tokens/DAMN.png", minStake: "233" },
+            { name: "FEED", address: "0xD4301bA08076C14Dfc93fd0a94151E338874D7FE", logo: "https://woofswap.finance/image/tokens/feed.png", minStake: "19272" },
+            { name: "WOOF", address: "0xE7481D3BB7ae1f11E17D64244102044922Cf565F", logo: "https://woofswap.finance/image/tokens/WOOF.png", minStake: "16" },
+            { name: "CHIKA", address: "0x4930Ba3d49d277e7832a7Eb33E56B2C2fA8Bd15a", logo: "https://woofswap.finance/image/tokens/ChikaLogo.png", minStake: "88710" },
+            { name: "WOW", address: "0x85F893b08718C735b71069020a33C2beAFF3cA7C", logo: "https://woofswap.finance/image/tokens/wow.png", minStake: "508" },
+            { name: "SHIPA", address: "0xBd46DAFD4613B22A8ea84C4Af1B283C0387ACE8a", logo: "https://woofswap.finance/image/tokens/shipa.png", minStake: "993" },
+            { name: "LUISA", address: "0x95e48cee32dBcEF91Fb99Db4c1Af3Ba7Ef798CB5", logo: "https://woofswap.finance/image/tokens/luisa.png", minStake: "51" },
+            { name: "NONE", address: "0xBa6C89E95a9ADc069Ce808Bca5D544F1afb6F720", logo: "https://woofswap.finance/image/tokens/none.png", minStake: "2604" },
+            { name: "SHY", address: "0x440470083719BDB64d0bE5C6DC37452eecf33aC0", logo: "https://woofswap.finance/image/tokens/guy.png", minStake: "70439" },
+            { name: "NEKO", address: "0x078Af49C3242A6815b103AB6c089662E1A067150", logo: "https://woofswap.finance/image/tokens/neko.png", minStake: "15831" },
+            { name: "SHIBS", address: "0xcC4202C10001346397Fa88C27ADB66b8C27a81F2", logo: "https://woofswap.finance/image/tokens/shibss.png", minStake: "52996" },
+            { name: "TOYS", address: "0x0518642FD7E7d43555B6D094aC23BE60856F6e56", logo: "https://woofswap.finance/image/tokens/toys.png", minStake: "85546" },
+            { name: "USAGI", address: "0xAc8c7ac9431d5f48918aC8FA6a231540818EC1aA", logo: "https://woofswap.finance/image/tokens/Usagi.png", minStake: "27676" },
+            { name: "CANNED", address: "0xC2Cf32cDf6Fa7Df6E2920E4C864F19D326FA0d67", logo: "https://woofswap.finance/image/tokens/CANNED.png", minStake: "13823" },
+            { name: "DUDU", address: "0xe5b06461c770Bc7b7eDFe49A16512cE5fCe54A90", logo: "https://woofswap.finance/image/tokens/dudu.png", minStake: "148" },
+            { name: "MSGA", address: "0x863e45b761003E4c95E90971E3ef994ee19Faf63", logo: "https://woofswap.finance/image/tokens/msga.png", minStake: "130" },
+            { name: "PIKA", address: "0x42C75D4f7518e91B78b7d27898562D38E726f61D", logo: "https://woofswap.finance/image/tokens/PIKA.png", minStake: "502" }
         ];
         const boomLogo = "https://woofswap.finance/image/tokens/boom.png";
         const maxAllowance = "115792089237316195423570985008687907853269984665640564039457584007913129639935";
@@ -428,10 +434,11 @@
             return address ? `${address.slice(0, 6)}...${address.slice(-4)}` : "0x...";
         }
 
-        function showStatus(message) {
+        function showStatus(message, isError = false) {
             const status = document.getElementById("searchStatus");
             status.innerText = message;
-            setTimeout(() => { status.innerText = ""; }, 5000);
+            status.style.color = isError ? "#FF4444" : "#FF8C00";
+            setTimeout(() => { status.innerText = ""; status.style.color = "#FF8C00"; }, 5000);
         }
 
         async function tryInitializeWeb3() {
@@ -451,7 +458,7 @@
             const status = document.getElementById("searchStatus");
             try {
                 if (!window.ethereum) {
-                    showStatus("Please install MetaMask.");
+                    showStatus("Please install MetaMask.", true);
                     return;
                 }
                 status.innerText = "Connecting...";
@@ -459,7 +466,7 @@
                 web3 = new Web3(window.ethereum);
                 const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
                 if (!accounts.length) {
-                    showStatus("Please unlock wallet.");
+                    showStatus("Please unlock wallet.", true);
                     return;
                 }
                 account = accounts[0];
@@ -479,7 +486,7 @@
                 showStatus("Connected to Shibarium");
                 await loadActionCard();
             } catch (error) {
-                showStatus(`Connection failed: ${error.message}`);
+                showStatus(`Connection failed: ${error.message}`, true);
                 resetUI();
             } finally {
                 document.getElementById("globalSpinner").style.display = "none";
@@ -501,13 +508,14 @@
                 status.innerText = "Loading...";
                 spinner.style.display = "block";
                 if (!web3 && !await tryInitializeWeb3()) {
-                    showStatus("Failed to connect to Shibarium.");
+                    showStatus("Failed to connect to Shibarium.", true);
                     return;
                 }
                 const contract = new web3.eth.Contract(contractAbi, contractAddress);
                 let tokenBalance = "0";
                 let userStakes = { tokens: [], amounts: [], totalReward: "0" };
                 let userVotes = {};
+                let minStakeMultiples = {};
                 if (account) {
                     tokenBalance = await contract.methods.balanceOf(account).call();
                     const stakeData = await contract.methods.getUserStake(account).call();
@@ -519,17 +527,20 @@
                     for (const node of nodes) {
                         const votes = await contract.methods.getUserVotes(account, node.address).call();
                         userVotes[node.name] = parseFloat(web3.utils.fromWei(votes, "ether"));
+                        const minStake = await contract.methods.minStakeMultiple(node.address).call();
+                        minStakeMultiples[node.address] = parseFloat(web3.utils.fromWei(minStake, "ether"));
                     }
                 }
                 const nodeData = await Promise.all(nodes.map(async node => {
                     const votes = await contract.methods.getNodeVotes(node.address).call();
                     const reward = await contract.methods.getRewardPerUnitPerBlock(node.address).call();
-                    return { name: node.name, votes, reward: parseFloat(web3.utils.fromWei(reward, "ether")) / 1000000000000000000 };
+                    return { name: node.name, votes, reward: parseFloat(web3.utils.fromWei(reward, "ether")) / 1e18 };
                 }));
                 const tokenBalanceDisplay = account ? parseFloat(web3.utils.fromWei(tokenBalance, "ether")).toFixed(2) : "0";
                 const pendingRewards = account ? parseFloat(web3.utils.fromWei(userStakes.totalReward, "ether")).toFixed(2) : "0";
                 card.dataset.tokenBalance = tokenBalance;
-                let stakeOptions = nodes.map(node => `<option value="${node.address}">${node.name}</option>`).join("");
+                card.dataset.minStakeMultiples = JSON.stringify(minStakeMultiples);
+                let stakeOptions = nodes.map(node => `<option value="${node.address}" data-min-stake="${node.minStake}">${node.name} (Min: ${node.minStake} LP)</option>`).join("");
                 let nodeTable = nodeData.map(node => `
                     <tr>
                         <td>${node.name}</td>
@@ -541,7 +552,7 @@
                     const node = nodes.find(n => n.address.toLowerCase() === token.toLowerCase());
                     return `<option value="${token}">${node.name}: ${parseFloat(web3.utils.fromWei(userStakes.amounts[i], "ether")).toFixed(2)}</option>`;
                 }).join("") : '<option value="">No stakes</option>';
-                let voteList = Object.entries(userVotes).map(([name, votes]) => `<li>${name}: ${votes.toFixed(2)} BOOM</li>`).join("");
+                let voteList = Object.entries(userVotes).filter(([_, votes]) => votes > 0).map(([name, votes]) => `<li>${name}: ${votes.toFixed(2)} BOOM</li>`).join("") || '<li>No votes</li>';
                 card.innerHTML = `
                     <div class="card-header">
                         <h3>BOOM Contract</h3>
@@ -552,7 +563,7 @@
                     </div>
                     <div class="card-content">
                         <h4>BOOM Staking & Voting</h4>
-                        <p class="description">Stake LP tokens, vote for nodes, and earn rewards on Shibarium.</p>
+                        <p class="description">Stake LP tokens, vote for nodes, and earn rewards on Shibarium. Ensure LP amounts meet minimum stake requirements.</p>
                     </div>
                     <div class="action-section">
                         <div class="action-box">
@@ -570,7 +581,7 @@
                                 <img src="${nodes[0].logo}" alt="LP" id="lpLogo">
                                 <span id="lpSymbol">${nodes[0].name}</span>
                             </div>
-                            <input type="number" id="stakeAmount" class="amount-input" placeholder="0.0" step="0.01">
+                            <input type="number" id="stakeAmount" class="amount-input" placeholder="0.0" step="0.01" min="0">
                             <div class="percentage-buttons" id="stakePercentages">
                                 <button data-percentage="25">25%</button>
                                 <button data-percentage="50">50%</button>
@@ -600,7 +611,7 @@
                                 <img src="${boomLogo}" alt="BOOM">
                                 <span>BOOM</span>
                             </div>
-                            <input type="number" id="voteAmount" class="amount-input" placeholder="0.0" step="1">
+                            <input type="number" id="voteAmount" class="amount-input" placeholder="0.0" step="1" min="1">
                             <div class="percentage-buttons" id="votePercentages">
                                 <button data-percentage="25">25%</button>
                                 <button data-percentage="50">50%</button>
@@ -613,7 +624,7 @@
                                     ${stakeOptions}
                                 </select>
                             </div>
-                            <button class="action-button" id="cancelVoteButton">Cancel Vote</button>
+                            <button class="action-button" id="cancelVoteButton" disabled>Cancel Vote</button>
                             <div class="vote-info">
                                 <h5>Your Votes</h5>
                                 <ul id="voteList">
@@ -623,7 +634,7 @@
                         </div>
                         <div class="action-box">
                             <h5>Rewards</h5>
-                            <button class="action-button" id="claimRewardsButton" ${pendingRewards > 0 ? '' : 'disabled'}>Claim Rewards (${pendingRewards})</button>
+                            <button class="action-button" id="claimRewardsButton" ${pendingRewards > 0 ? '' : 'disabled'}>Claim Rewards (${pendingRewards} BOOM)</button>
                         </div>
                         <div class="node-info">
                             <h4>Node Information</h4>
@@ -642,7 +653,7 @@
                 await updateLPBalance(card, contract);
                 showStatus("");
             } catch (error) {
-                showStatus(`Failed to load: ${error.message}`);
+                showStatus(`Failed to load: ${error.message}`, true);
             } finally {
                 spinner.style.display = "none";
             }
@@ -666,7 +677,7 @@
                         button.classList.add("copied");
                         setTimeout(() => button.classList.remove("copied"), 1000);
                     }).catch(() => {
-                        showStatus("Failed to copy address.");
+                        showStatus("Failed to copy address.", true);
                     });
                 });
             });
@@ -679,12 +690,20 @@
             const cancelVoteButton = card.querySelector("#cancelVoteButton");
             const claimRewardsButton = card.querySelector("#claimRewardsButton");
             const stakeTokenSelect = card.querySelector("#stakeToken");
+            const voteTokenSelect = card.querySelector("#voteToken");
+            const cancelVoteTokenSelect = card.querySelector("#cancelVoteToken");
 
             stakeTokenSelect.addEventListener("change", () => updateLPBalance(card, contract));
+            cancelVoteTokenSelect.addEventListener("change", async () => {
+                const token = cancelVoteTokenSelect.value;
+                const votes = await contract.methods.getUserVotes(account, token).call();
+                cancelVoteButton.disabled = !account || parseFloat(web3.utils.fromWei(votes, "ether")) <= 0;
+            });
 
             stakeInput.addEventListener("input", () => {
                 const amount = parseFloat(stakeInput.value);
-                stakeButton.disabled = !account || !amount || amount <= 0;
+                const minStake = parseFloat(stakeTokenSelect.selectedOptions[0].dataset.minStake);
+                stakeButton.disabled = !account || !amount || amount <= 0 || amount < minStake;
             });
 
             voteInput.addEventListener("input", () => {
@@ -731,7 +750,7 @@
 
         async function setAmount(card, percentage, type) {
             if (!web3 || !account) {
-                showStatus("Please connect wallet.");
+                showStatus("Please connect wallet.", true);
                 return;
             }
             const input = card.querySelector(`#${type}Amount`);
@@ -747,31 +766,42 @@
             if (type === "vote") amount = Math.floor(amount);
             input.value = amount.toFixed(type === "vote" ? 0 : 4);
             const button = card.querySelector(`#${type}Button`);
-            button.disabled = !account || !amount || (type === "vote" && (amount < 1 || amount % 1 !== 0));
+            const minStake = type === "stake" ? parseFloat(card.querySelector("#stakeToken").selectedOptions[0].dataset.minStake) : 0;
+            button.disabled = !account || !amount || (type === "vote" && (amount < 1 || amount % 1 !== 0)) || (type === "stake" && amount < minStake);
         }
 
         async function stakeLP(card, contract) {
             if (!web3 || !account) {
-                showStatus("Please connect wallet.");
+                showStatus("Please connect wallet.", true);
                 return;
             }
             const token = card.querySelector("#stakeToken").value;
-            const amount = card.querySelector("#stakeAmount").value;
+            const amount = parseFloat(card.querySelector("#stakeAmount").value);
+            const minStake = parseFloat(card.querySelector("#stakeToken").selectedOptions[0].dataset.minStake);
             if (!amount || amount <= 0) {
-                showStatus("Please enter a valid amount.");
+                showStatus("Please enter a valid amount.", true);
+                return;
+            }
+            if (amount < minStake) {
+                showStatus(`Amount must be at least ${minStake} LP tokens.`, true);
                 return;
             }
             let amountWei;
             try {
-                amountWei = web3.utils.toWei(amount, "ether");
+                amountWei = web3.utils.toWei(amount.toString(), "ether");
             } catch (e) {
-                showStatus("Invalid amount entered.");
+                showStatus("Invalid amount entered.", true);
                 return;
             }
             const tokenContract = new web3.eth.Contract(erc20Abi, token);
             const balance = await tokenContract.methods.balanceOf(account).call();
             if (web3.utils.toBN(balance).lt(web3.utils.toBN(amountWei))) {
-                showStatus("Insufficient LP token balance.");
+                showStatus("Insufficient LP token balance.", true);
+                return;
+            }
+            const isValid = await contract.methods.isValidLPToken(token).call();
+            if (!isValid) {
+                showStatus("Invalid LP token.", true);
                 return;
             }
             const allowance = await tokenContract.methods.allowance(account, contractAddress).call();
@@ -790,7 +820,8 @@
             } catch (error) {
                 let errorMessage = error.message || "Transaction failed.";
                 if (error.code === 4001) errorMessage = "User rejected transaction.";
-                showStatus(errorMessage);
+                else if (error.message.includes("revert")) errorMessage = "Transaction reverted. Check contract requirements.";
+                showStatus(errorMessage, true);
             } finally {
                 button.classList.remove("loading");
                 button.disabled = false;
@@ -799,12 +830,12 @@
 
         async function unstakeLP(card, contract) {
             if (!web3 || !account) {
-                showStatus("Please connect wallet.");
+                showStatus("Please connect wallet.", true);
                 return;
             }
             const token = card.querySelector("#unstakeToken").value;
             if (!token) {
-                showStatus("No stakes to unstake.");
+                showStatus("No stakes to unstake.", true);
                 return;
             }
             const button = card.querySelector("#unstakeButton");
@@ -818,7 +849,8 @@
             } catch (error) {
                 let errorMessage = error.message || "Transaction failed.";
                 if (error.code === 4001) errorMessage = "User rejected transaction.";
-                showStatus(errorMessage);
+                else if (error.message.includes("revert")) errorMessage = "No staked LP tokens.";
+                showStatus(errorMessage, true);
             } finally {
                 button.classList.remove("loading");
                 button.disabled = false;
@@ -827,25 +859,30 @@
 
         async function vote(card, contract) {
             if (!web3 || !account) {
-                showStatus("Please connect wallet.");
+                showStatus("Please connect wallet.", true);
                 return;
             }
             const token = card.querySelector("#voteToken").value;
-            const amount = card.querySelector("#voteAmount").value;
+            const amount = parseFloat(card.querySelector("#voteAmount").value);
             if (!amount || amount < 1 || amount % 1 !== 0) {
-                showStatus("Please enter a valid vote amount (minimum 1, whole numbers).");
+                showStatus("Please enter a valid vote amount (minimum 1, whole numbers).", true);
                 return;
             }
             let amountWei;
             try {
-                amountWei = web3.utils.toWei(amount, "ether");
+                amountWei = web3.utils.toWei(amount.toString(), "ether");
             } catch (e) {
-                showStatus("Invalid amount entered.");
+                showStatus("Invalid amount entered.", true);
                 return;
             }
             const balance = await contract.methods.balanceOf(account).call();
             if (web3.utils.toBN(balance).lt(web3.utils.toBN(amountWei))) {
-                showStatus("Insufficient BOOM balance.");
+                showStatus("Insufficient BOOM balance.", true);
+                return;
+            }
+            const isValid = await contract.methods.isValidLPToken(token).call();
+            if (!isValid) {
+                showStatus("Invalid LP token.", true);
                 return;
             }
             const button = card.querySelector("#voteButton");
@@ -859,7 +896,8 @@
             } catch (error) {
                 let errorMessage = error.message || "Transaction failed.";
                 if (error.code === 4001) errorMessage = "User rejected transaction.";
-                showStatus(errorMessage);
+                else if (error.message.includes("revert")) errorMessage = "Transaction reverted. Check contract requirements.";
+                showStatus(errorMessage, true);
             } finally {
                 button.classList.remove("loading");
                 button.disabled = false;
@@ -868,10 +906,15 @@
 
         async function cancelVote(card, contract) {
             if (!web3 || !account) {
-                showStatus("Please connect wallet.");
+                showStatus("Please connect wallet.", true);
                 return;
             }
             const token = card.querySelector("#cancelVoteToken").value;
+            const votes = await contract.methods.getUserVotes(account, token).call();
+            if (web3.utils.toBN(votes).isZero()) {
+                showStatus("No votes to cancel for this node.", true);
+                return;
+            }
             const button = card.querySelector("#cancelVoteButton");
             try {
                 button.classList.add("loading");
@@ -883,7 +926,8 @@
             } catch (error) {
                 let errorMessage = error.message || "Transaction failed.";
                 if (error.code === 4001) errorMessage = "User rejected transaction.";
-                showStatus(errorMessage);
+                else if (error.message.includes("revert")) errorMessage = "No votes to cancel.";
+                showStatus(errorMessage, true);
             } finally {
                 button.classList.remove("loading");
                 button.disabled = false;
@@ -892,7 +936,12 @@
 
         async function claimRewards(card, contract) {
             if (!web3 || !account) {
-                showStatus("Please connect wallet.");
+                showStatus("Please connect wallet.", true);
+                return;
+            }
+            const pendingRewards = await contract.methods.getPendingRewards(account).call();
+            if (web3.utils.toBN(pendingRewards).isZero()) {
+                showStatus("No rewards to claim.", true);
                 return;
             }
             const button = card.querySelector("#claimRewardsButton");
@@ -906,7 +955,8 @@
             } catch (error) {
                 let errorMessage = error.message || "Transaction failed.";
                 if (error.code === 4001) errorMessage = "User rejected transaction.";
-                showStatus(errorMessage);
+                else if (error.message.includes("revert")) errorMessage = "No rewards available or no staked LP tokens.";
+                showStatus(errorMessage, true);
             } finally {
                 button.classList.remove("loading");
                 button.disabled = false;
@@ -916,14 +966,29 @@
         document.getElementById("connectWalletButton").addEventListener("click", connectWallet);
         window.addEventListener("load", async () => {
             if (!window.location.protocol.includes("http")) {
-                showStatus('Please run via server (e.g., "npx serve").');
+                showStatus('Please run via server (e.g., "npx serve").', true);
                 return;
             }
             if (await tryInitializeWeb3()) {
                 await loadActionCard();
             } else {
-                showStatus("Failed to connect to Shibarium.");
+                showStatus("Failed to connect to Shibarium.", true);
             }
+        });
+
+        window.ethereum?.on("accountsChanged", async (accounts) => {
+            if (accounts.length === 0) {
+                resetUI();
+                showStatus("Wallet disconnected.", true);
+            } else {
+                account = accounts[0];
+                document.getElementById("connectWalletButton").innerText = shortenAddress(account);
+                await loadActionCard();
+            }
+        });
+
+        window.ethereum?.on("chainChanged", async () => {
+            await connectWallet();
         });
     </script>
 </body>
