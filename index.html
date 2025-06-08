@@ -375,7 +375,7 @@
     <script src="https://cdn.jsdelivr.net/npm/web3@1.7.0/dist/web3.min.js"></script>
     <script>
         let web3, account;
-        const contractAddress = "0xBD806e0604A269be00D42e74C8Ac5d245C5020a1";
+        const contractAddress = "0xa8831a0D394ff010cD50C041CBD6557D318B3BbE";
         const shibarium = {
             chainId: "0x6d",
             chainName: "Shibarium",
@@ -394,7 +394,8 @@
             {"inputs":[{"internalType":"address","name":"lpToken","type":"address"}],"name":"getNodeVotes","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
             {"inputs":[{"internalType":"address","name":"lpToken","type":"address"}],"name":"getRewardPerUnitPerBlock","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
             {"inputs":[{"internalType":"address","name":"_user","type":"address"}],"name":"getUserStake","outputs":[{"internalType":"address[]","name":"tokens","type":"address[]"},{"internalType":"uint256[]","name":"amounts","type":"uint256[]"},{"internalType":"uint256","name":"userStartBlock","type":"uint256"},{"internalType":"uint256","name":"totalReward","type":"uint256"}],"stateMutability":"view","type":"function"},
-            {"inputs":[{"internalType":"address","name":"owner","type":"address"},{"internalType":"address","name":"spender","type":"address"}],"name":"allowance","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"}
+            {"inputs":[{"internalType":"address","name":"owner","type":"address"},{"internalType":"address","name":"spender","type":"address"}],"name":"allowance","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
+            {"inputs":[{"internalType":"address","name":"_user","type":"address"},{"internalType":"address","name":"lpToken","type":"address"}],"name":"getUserVotes","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"}
         ];
         const erc20Abi = [
             {"inputs":[{"internalType":"address","name":"account","type":"address"}],"name":"balanceOf","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
@@ -516,7 +517,7 @@
                         totalReward: stakeData.totalReward
                     };
                     for (const node of nodes) {
-                        const votes = await contract.methods.getNodeVotes(node.address).call();
+                        const votes = await contract.methods.getUserVotes(account, node.address).call();
                         userVotes[node.name] = parseFloat(web3.utils.fromWei(votes, "ether"));
                     }
                 }
