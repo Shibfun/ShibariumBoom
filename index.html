@@ -316,6 +316,12 @@
             text-align: center;
             margin: 12px 0;
         }
+        .stake-note {
+            font-size: 0.85em;
+            color: #FFA500;
+            margin-top: 8px;
+            text-align: left;
+        }
         .footer {
             font-size: 0.8em;
             color: #B0B0B0;
@@ -375,7 +381,7 @@
     <script src="https://cdn.jsdelivr.net/npm/web3@1.7.0/dist/web3.min.js"></script>
     <script>
         let web3, account;
-        const contractAddress = "0x4c5315De1f699fC98641f9834B5415Dd6Aaf7435";
+        const contractAddress = "0x22B6A66d4003a0745855410ac34047f58A11CaBC";
         const shibarium = {
             chainId: "0x6d",
             chainName: "Shibarium",
@@ -563,7 +569,7 @@
                     </div>
                     <div class="card-content">
                         <h4>BOOM Staking & Voting</h4>
-                        <p class="description">Stake LP tokens, vote for nodes, and earn rewards on Shibarium. Ensure LP amounts meet minimum stake requirements.</p>
+                        <p class="description">Stake LP tokens, vote for nodes, and earn rewards on Shibarium. Rewards are calculated based on complete portions of the minimum stake, remainders are ignored.</p>
                     </div>
                     <div class="action-section">
                         <div class="action-box">
@@ -582,6 +588,7 @@
                                 <span id="lpSymbol">${nodes[0].name}</span>
                             </div>
                             <input type="number" id="stakeAmount" class="amount-input" placeholder="0.0" step="0.01" min="0">
+                            <p class="stake-note" id="stakeNote">Note: Rewards are calculated per ${nodes[0].minStake} LP portion, remainders are ignored.</p>
                             <div class="percentage-buttons" id="stakePercentages">
                                 <button data-percentage="25">25%</button>
                                 <button data-percentage="50">50%</button>
@@ -668,6 +675,7 @@
             card.querySelector("#lpBalance").innerText = `Balance: ${parseFloat(web3.utils.fromWei(balance, "ether")).toFixed(2)}`;
             card.querySelector("#lpSymbol").innerText = node.name;
             card.querySelector("#lpLogo").src = node.logo;
+            card.querySelector("#stakeNote").innerText = `Note: Rewards are calculated per ${node.minStake} LP portion, remainders are ignored.`;
         }
 
         function setupCardListeners(card, contract) {
@@ -764,6 +772,10 @@
             }
             let amount = percentage === "100" ? Math.max(0, balance - 0.01) : balance * (percentage / 100);
             if (type === "vote") amount = Math.floor(amount);
+            if (type === "stake") {
+                const minStake = parseFloat(card.querySelector("#stakeToken").selectedOptions[0].dataset.minStake);
+                amount = Math.floor(amount / minStake) * minStake;
+            }
             input.value = amount.toFixed(type === "vote" ? 0 : 4);
             const button = card.querySelector(`#${type}Button`);
             const minStake = type === "stake" ? parseFloat(card.querySelector("#stakeToken").selectedOptions[0].dataset.minStake) : 0;
@@ -785,6 +797,10 @@
             if (amount < minStake) {
                 showStatus(`Amount must be at least ${minStake} LP tokens.`, true);
                 return;
+            }
+            const portions = Math.floor(amount / minStake);
+            if (amount % minStake !== 0) {
+                showStatus(`Warning: Input amount is not a multiple of ${minStake}. Only ${portions * minStake} LP will count toward rewards.`, true);
             }
             let amountWei;
             try {
@@ -865,7 +881,7 @@
             const token = card.querySelector("#voteToken").value;
             const amount = parseFloat(card.querySelector("#voteAmount").value);
             if (!amount || amount < 1 || amount % 1 !== 0) {
-                showStatus("Please enter a valid vote amount (minimum 1, whole numbers).", true);
+                showStatus("Please enter a valid vote amount (minimum 1, whole number).", true);
                 return;
             }
             let amountWei;
@@ -896,7 +912,7 @@
             } catch (error) {
                 let errorMessage = error.message || "Transaction failed.";
                 if (error.code === 4001) errorMessage = "User rejected transaction.";
-                else if (error.message.includes("revert")) errorMessage = "Transaction reverted. Check contract requirements.";
+                else if (error.message.includes("revert")) errorMessage = "Transaction reverted. Check requirements.";
                 showStatus(errorMessage, true);
             } finally {
                 button.classList.remove("loading");
