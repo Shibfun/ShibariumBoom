@@ -473,147 +473,147 @@
         }
 
         async function loadActionCard() {
-            const status = document.getElementById("searchStatus");
-            const card = document.getElementById("actionCard");
-            const spinner = document.getElementById("globalSpinner");
-            try {
-                status.innerText = "Loading...";
-                spinner.style.display = "block";
-                if (!web3 && !await tryInitializeWeb3()) {
-                    showStatus("Failed to connect to Shibarium.");
-                    return;
-                }
-                const contract = new web3.eth.Contract(contractAbi, contractAddress);
-                let tokenBalance = "0";
-                let userStakes = { tokens: [], amounts: [], totalReward: "0" };
-                if (account) {
-                    tokenBalance = await contract.methods.balanceOf(account).call();
-                    const stakeData = await contract.methods.getUserStake(account).call();
-                    userStakes = {
-                        tokens: stakeData.tokens,
-                        amounts: stakeData.amounts,
-                        totalReward: stakeData.totalReward
-                    };
-                }
-                const nodeData = await Promise.all(nodes.map(async node => {
-                    const votes = await contract.methods.getNodeVotes(node.address).call();
-                    const reward = await contract.methods.getRewardPerUnitPerBlock(node.address).call();
-                    return { name: node.name, votes, reward: parseFloat(web3.utils.fromWei(reward, "ether")) / 100 };
-                }));
-                const tokenBalanceDisplay = account ? parseFloat(web3.utils.fromWei(tokenBalance, "ether")).toFixed(2) : "0";
-                const pendingRewards = account ? parseFloat(web3.utils.fromWei(userStakes.totalReward, "ether")).toFixed(2) : "0";
-                card.dataset.tokenBalance = tokenBalance;
-                let stakeOptions = nodes.map(node => `<option value="${node.address}">${node.name}</option>`).join("");
-                let nodeTable = nodeData.map(node => `
-                    <tr>
-                        <td>${node.name}</td>
-                        <td>${parseFloat(web3.utils.fromWei(node.votes, "ether")).toFixed(2)}</td>
-                        <td>${node.reward.toFixed(2)}</td>
-                    </tr>
-                `).join("");
-                let userStakesHtml = userStakes.tokens.length ? userStakes.tokens.map((token, i) => {
-                    const node = nodes.find(n => n.address.toLowerCase() === token.toLowerCase());
-                    return `<option value="${token}">${node.name}: ${parseFloat(web3.utils.fromWei(userStakes.amounts[i], "ether")).toFixed(2)}</option>`;
-                }).join("") : '<option value="">No stakes</option>';
-                card.innerHTML = `
-                    <div class="card-header">
-                        <h3>BOOM Contract</h3>
-                        <button class="copy-button" data-address="${contractAddress}">
-                            <img src="https://img.icons8.com/ios-filled/16/000000/contract.png" alt="Copy Contract">
-                            <span class="tooltip">Copied Contract!</span>
-                        </button>
-                    </div>
-                    <div class="card-content">
-                        <h4>BOOM Staking & Voting</h4>
-                        <p class="description">Stake LP tokens, vote for nodes, and earn rewards on Shibarium.</p>
-                    </div>
-                    <div class="action-section">
-                        <div class="action-box">
-                            <h5>Stake / Unstake</h5>
-                            <div class="select-box">
-                                <select id="stakeToken">
-                                    ${stakeOptions}
-                                </select>
-                            </div>
-                            <div class="balance-row">
-                                <span>LP Token</span>
-                                <span id="lpBalance">Balance: 0</span>
-                            </div>
-                            <div class="token-info">
-                                <img src="${nodes[0].logo}" alt="LP" id="lpLogo">
-                                <span id="lpSymbol">${nodes[0].name}</span>
-                            </div>
-                            <input type="number" id="stakeAmount" class="amount-input" placeholder="0.0" step="0.01">
-                            <div class="percentage-buttons" id="stakePercentages">
-                                <button data-percentage="25">25%</button>
-                                <button data-percentage="50">50%</button>
-                                <button data-percentage="75">75%</button>
-                                <button data-percentage="100">MAX</button>
-                            </div>
-                            <button class="action-button" id="stakeButton" disabled>Stake</button>
-                            <div class="select-box" style="margin-top: 12px;">
-                                <select id="unstakeToken">
-                                    ${userStakesHtml}
-                                </select>
-                            </div>
-                            <button class="action-button" id="unstakeButton" ${userStakes.tokens.length ? '' : 'disabled'}>Unstake</button>
-                        </div>
-                        <div class="action-box">
-                            <h5>Vote / Cancel Vote</h5>
-                            <div class="select-box">
-                                <select id="voteToken">
-                                    ${stakeOptions}
-                                </select>
-                            </div>
-                            <div class="balance-row">
-                                <span>BOOM</span>
-                                <span>Balance: ${tokenBalanceDisplay}</span>
-                            </div>
-                            <div class="token-info">
-                                <img src="${boomLogo}" alt="BOOM">
-                                <span>BOOM</span>
-                            </div>
-                            <input type="number" id="voteAmount" class="amount-input" placeholder="0.0" step="1">
-                            <div class="percentage-buttons" id="votePercentages">
-                                <button data-percentage="25">25%</button>
-                                <button data-percentage="50">50%</button>
-                                <button data-percentage="75">75%</button>
-                                <button data-percentage="100">MAX</button>
-                            </div>
-                            <button class="action-button" id="voteButton" disabled>Vote</button>
-                            <div class="select-box" style="margin-top: 12px;">
-                                <select id="cancelVoteToken">
-                                    ${stakeOptions}
-                                </select>
-                            </div>
-                            <button class="action-button" id="cancelVoteButton">Cancel Vote</button>
-                        </div>
-                        <div class="action-box">
-                            <h5>Rewards</h5>
-                            <button class="action-button" id="claimRewardsButton" ${pendingRewards > 0 ? '' : 'disabled'}>Claim Rewards (${pendingRewards})</button>
-                        </div>
-                        <div class="node-info">
-                            <h4>Node Information</h4>
-                            <table>
-                                <tr>
-                                    <th>Node</th>
-                                    <th>Votes (BOOM)</th>
-                                    <th>Reward/Block</th>
-                                </tr>
-                                ${nodeTable}
-                            </table>
-                        </div>
-                    </div>
-                `;
-                setupCardListeners(card, contract);
-                await updateLPBalance(card, contract);
-                showStatus("");
-            } catch (error) {
-                showStatus(`Failed to load: ${error.message}`);
-            } finally {
-                spinner.style.display = "none";
-            }
+    const status = document.getElementById("searchStatus");
+    const card = document.getElementById("actionCard");
+    const spinner = document.getElementById("globalSpinner");
+    try {
+        status.innerText = "Loading...";
+        spinner.style.display = "block";
+        if (!web3 && !await tryInitializeWeb3()) {
+            showStatus("Failed to connect to Shibarium.");
+            return;
         }
+        const contract = new web3.eth.Contract(contractAbi, contractAddress);
+        let tokenBalance = "0";
+        let userStakes = { tokens: [], amounts: [], totalReward: "0" };
+        if (account) {
+            tokenBalance = await contract.methods.balanceOf(account).call();
+            const stakeData = await contract.methods.getUserStake(account).call();
+            userStakes = {
+                tokens: stakeData.tokens,
+                amounts: stakeData.amounts,
+                totalReward: stakeData.totalReward
+            };
+        }
+        const nodeData = await Promise.all(nodes.map(async node => {
+            const votes = await contract.methods.getNodeVotes(node.address).call();
+            const reward = await contract.methods.getRewardPerUnitPerBlock(node.address).call();
+            return { name: node.name, votes, reward: parseFloat(web3.utils.fromWei(reward, "ether")) / 10000000000000000 };
+        }));
+        const tokenBalanceDisplay = account ? parseFloat(web3.utils.fromWei(tokenBalance, "ether")).toFixed(2) : "0";
+        const pendingRewards = account ? parseFloat(web3.utils.fromWei(userStakes.totalReward, "ether")).toFixed(2) : "0";
+        card.dataset.tokenBalance = tokenBalance;
+        let stakeOptions = nodes.map(node => `<option value="${node.address}">${node.name}</option>`).join("");
+        let nodeTable = nodeData.map(node => `
+            <tr>
+                <td>${node.name}</td>
+                <td>${parseFloat(web3.utils.fromWei(node.votes, "ether")).toFixed(2)}</td>
+                <td>${node.reward.toFixed(3)}</td>
+            </tr>
+        `).join("");
+        let userStakesHtml = userStakes.tokens.length ? userStakes.tokens.map((token, i) => {
+            const node = nodes.find(n => n.address.toLowerCase() === token.toLowerCase());
+            return `<option value="${token}">${node.name}: ${parseFloat(web3.utils.fromWei(userStakes.amounts[i], "ether")).toFixed(2)}</option>`;
+        }).join("") : '<option value="">No stakes</option>';
+        card.innerHTML = `
+            <div class="card-header">
+                <h3>BOOM Contract</h3>
+                <button class="copy-button" data-address="${contractAddress}">
+                    <img src="https://img.icons8.com/ios-filled/16/000000/contract.png" alt="Copy Contract">
+                    <span class="tooltip">Copied Contract!</span>
+                </button>
+            </div>
+            <div class="card-content">
+                <h4>BOOM Staking & Voting</h4>
+                <p class="description">Stake LP tokens, vote for nodes, and earn rewards on Shibarium.</p>
+            </div>
+            <div class="action-section">
+                <div class="action-box">
+                    <h5>Stake / Unstake</h5>
+                    <div class="select-box">
+                        <select id="stakeToken">
+                            ${stakeOptions}
+                        </select>
+                    </div>
+                    <div class="balance-row">
+                        <span>LP Token</span>
+                        <span id="lpBalance">Balance: 0</span>
+                    </div>
+                    <div class="token-info">
+                        <img src="${nodes[0].logo}" alt="LP" id="lpLogo">
+                        <span id="lpSymbol">${nodes[0].name}</span>
+                    </div>
+                    <input type="number" id="stakeAmount" class="amount-input" placeholder="0.0" step="0.01">
+                    <div class="percentage-buttons" id="stakePercentages">
+                        <button data-percentage="25">25%</button>
+                        <button data-percentage="50">50%</button>
+                        <button data-percentage="75">75%</button>
+                        <button data-percentage="100">MAX</button>
+                    </div>
+                    <button class="action-button" id="stakeButton" disabled>Stake</button>
+                    <div class="select-box" style="margin-top: 12px;">
+                        <select id="unstakeToken">
+                            ${userStakesHtml}
+                        </select>
+                    </div>
+                    <button class="action-button" id="unstakeButton" ${userStakes.tokens.length ? '' : 'disabled'}>Unstake</button>
+                </div>
+                <div class="action-box">
+                    <h5>Vote / Cancel Vote</h5>
+                    <div class="select-box">
+                        <select id="voteToken">
+                            ${stakeOptions}
+                        </select>
+                    </div>
+                    <div class="balance-row">
+                        <span>BOOM</span>
+                        <span>Balance: ${tokenBalanceDisplay}</span>
+                    </div>
+                    <div class="token-info">
+                        <img src="${boomLogo}" alt="BOOM">
+                        <span>BOOM</span>
+                    </div>
+                    <input type="number" id="voteAmount" class="amount-input" placeholder="0.0" step="1">
+                    <div class="percentage-buttons" id="votePercentages">
+                        <button data-percentage="25">25%</button>
+                        <button data-percentage="50">50%</button>
+                        <button data-percentage="75">75%</button>
+                        <button data-percentage="100">MAX</button>
+                    </div>
+                    <button class="action-button" id="voteButton" disabled>Vote</button>
+                    <div class="select-box" style="margin-top: 12px;">
+                        <select id="cancelVoteToken">
+                            ${stakeOptions}
+                        </select>
+                    </div>
+                    <button class="action-button" id="cancelVoteButton">Cancel Vote</button>
+                </div>
+                <div class="action-box">
+                    <h5>Rewards</h5>
+                    <button class="action-button" id="claimRewardsButton" ${pendingRewards > 0 ? '' : 'disabled'}>Claim Rewards (${pendingRewards})</button>
+                </div>
+                <div class="node-info">
+                    <h4>Node Information</h4>
+                    <table>
+                        <tr>
+                            <th>Node</th>
+                            <th>Votes (BOOM)</th>
+                            <th>Reward/Block</th>
+                        </tr>
+                        ${nodeTable}
+                    </table>
+                </div>
+            </div>
+        `;
+        setupCardListeners(card, contract);
+        await updateLPBalance(card, contract);
+        showStatus("");
+    } catch (error) {
+        showStatus(`Failed to load: ${error.message}`);
+    } finally {
+        spinner.style.display = "none";
+    }
+}
 
         async function updateLPBalance(card, contract) {
             if (!account) return;
