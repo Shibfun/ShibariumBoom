@@ -381,7 +381,7 @@
     <script src="https://cdn.jsdelivr.net/npm/web3@1.7.0/dist/web3.min.js"></script>
     <script>
         let web3, account;
-        const contractAddress = "0x22B6A66d4003a0745855410ac34047f58A11CaBC";
+        const contractAddress = "0x6bE476eFD70e1fFB9D70991A32fcD02dcB5aC2d3";
         const shibarium = {
             chainId: "0x6d",
             chainName: "Shibarium",
@@ -540,7 +540,7 @@
                 const nodeData = await Promise.all(nodes.map(async node => {
                     const votes = await contract.methods.getNodeVotes(node.address).call();
                     const reward = await contract.methods.getRewardPerUnitPerBlock(node.address).call();
-                    return { name: node.name, votes, reward: parseFloat(web3.utils.fromWei(reward, "ether")) / 1e18 };
+                    return { name: node.name, votes, reward: parseFloat(web3.utils.fromWei(reward, "ether")) };
                 }));
                 const tokenBalanceDisplay = account ? parseFloat(web3.utils.fromWei(tokenBalance, "ether")).toFixed(2) : "0";
                 const pendingRewards = account ? parseFloat(web3.utils.fromWei(userStakes.totalReward, "ether")).toFixed(2) : "0";
