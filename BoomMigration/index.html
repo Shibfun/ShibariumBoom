@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BOOM Migration</title>
+    <link rel="icon" type="image/png" href="https://shibarium.fun/images/favicon.png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #121212;
+            color: #E0E0E0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 16px;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+        .header h1 {
+            font-size: clamp(1.8rem, 5vw, 2.5rem);
+            font-weight: 700;
+            color: #FF8C00;
+            letter-spacing: 1px;
+        }
+        .connect-section {
+            margin-bottom: 16px;
+        }
+        .connect-section button {
+            padding: 10px 24px;
+            background: linear-gradient(45deg, #FF8C00, #FFA500);
+            color: #FFF;
+            border: none;
+            border-radius: 24px;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: transform 0.2s, background 0.3s;
+        }
+        .connect-section button:hover {
+            transform: scale(1.05);
+            background: linear-gradient(45deg, #FFA500, #FF8C00);
+        }
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 24px;
+            justify-content: center;
+        }
+        .card {
+            background: #1E1E1E;
+            border: 1px solid #333;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 500px;
+            display: flex;
+            flex-direction: column;
+        }
+        .card-header {
+            display: flex;
+            align-items: center;
+            padding: 16px;
+            background: #252525;
+            border-bottom: 1px solid #333;
+        }
+        .card-header h3 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            flex-grow: 1;
+            color: #E0E0E0;
+        }
+        .card-header .copy-button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 6px;
+            position: relative;
+        }
+        .card-header .copy-button img {
+            width: 18px;
+            height: 18px;
+            filter: invert(1);
+        }
+        .card-header .copy-button .tooltip {
+            visibility: hidden;
+            background: #FF8C00;
+            color: #FFF;
+            font-size: 0.8rem;
+            padding: 4px 8px;
+            border-radius: 4px;
+            position: absolute;
+            top: -30px;
+            right: 0;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+        .card-header .copy-button.copied .tooltip {
+            visibility: visible;
+            opacity: 1;
+        }
+        .card-content {
+            padding: 16px;
+            flex-grow: 1;
+        }
+        .card-content h4 {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: #FF8C00;
+        }
+        .card-content p.description {
+            font-size: 0.9rem;
+            color: #B0B0B0;
+            margin-bottom: 16px;
+            line-height: 1.5;
+        }
+        .action-section {
+            padding: 16px;
+            border-top: 1px solid #333;
+        }
+        .action-box {
+            background: #252525;
+            padding: 16px;
+            border-radius: 12px;
+            margin-bottom: 16px;
+        }
+        .action-box h5 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #FF8C00;
+            margin-bottom: 12px;
+        }
+        .balance-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            margin-bottom: 8px;
+            color: #FF8C00;
+        }
+        .token-info {
+            display: flex;
+            align-items: center;
+            padding: 8px;
+            background: #1E1E1E;
+            border-radius: 8px;
+            margin-bottom: 8px;
+        }
+        .token-info img {
+            width: 20px;
+            height: 20px;
+            margin-right: 8px;
+        }
+        .token-info span {
+            font-size: 0.9rem;
+            color: #E0E0E0;
+        }
+        .action-box input {
+            width: 100%;
+            padding: 10px;
+            background: #1E1E1E;
+            border: 1px solid #333;
+            border-radius: 8px;
+            color: #E0E0E0;
+            font-size: 0.9rem;
+            text-align: right;
+            outline: none;
+        }
+        .percentage-buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+            margin: 8px 0;
+        }
+        .percentage-buttons button {
+            padding: 0;
+            background: #333;
+            border: 1px solid #444;
+            border-radius: 8px;
+            cursor: pointer;
+            color: #E0E0E0;
+            font-size: 0.85rem;
+            font-weight: 600;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+        .percentage-buttons button:hover {
+            background: #FF8C00;
+            color: #FFF;
+            transform: scale(1.05);
+        }
+        .percentage-buttons button.active {
+            background: linear-gradient(45deg, #FF8C00, #FFA500);
+            color: #FFF;
+            border-color: #FF8C00;
+        }
+        .action-box .action-button {
+            padding: 10px;
+            background: linear-gradient(45deg, #FF8C00, #FFA500);
+            color: #FFF;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            width: 100%;
+            font-size: 0.9rem;
+            position: relative;
+            transition: background 0.3s;
+        }
+        .action-box .action-button:disabled {
+            background: #555;
+            cursor: not-allowed;
+        }
+        .action-box .action-button:hover:not(:disabled) {
+            background: linear-gradient(45deg, #FFA500, #FF8C00);
+        }
+        .action-box .action-button .spinner {
+            display: none;
+            border: 2px solid #FFF;
+            border-top: 2px solid transparent;
+            border-radius: 50%;
+            width: 16px;
+            height: 16px;
+            animation: spin 1s linear infinite;
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+        .action-box .action-button.loading .spinner {
+            display: block;
+        }
+        .global-spinner {
+            border: 4px solid #FF8C00;
+            border-top: 4px solid transparent;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 24px auto;
+            display: none;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .status {
+            font-size: 0.9rem;
+            color: #FF8C00;
+            text-align: center;
+            margin: 12px 0;
+        }
+        .stake-note {
+            font-size: 0.85rem;
+            color: #FFA500;
+            margin-top: 8px;
+            text-align: left;
+        }
+        .stake-note.warning {
+            color: #FF4444;
+            font-weight: 600;
+        }
+        .footer {
+            font-size: 0.8rem;
+            color: #B0B0B0;
+            text-align: center;
+            margin-top: auto;
+            padding: 16px;
+        }
+        .footer a {
+            color: #FF8C00;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        .footer a:hover {
+            color: #FFA500;
+        }
+        @media (max-width: 768px) {
+            body {
+                padding: 12px;
+            }
+            .header h1 {
+                font-size: 1.8rem;
+            }
+            .card {
+                max-width: 100%;
+            }
+            .card-header h3 {
+                font-size: 1rem;
+            }
+            .card-content h4 {
+                font-size:Julian: 1.2rem;
+            }
+            .card-content p.description {
+                font-size: 0.85rem;
+            }
+            .percentage-buttons {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>BOOM Migration</h1>
+    </div>
+    <div class="connect-section">
+        <button id="connectWalletButton">Connect Wallet</button>
+    </div>
+    <div id="searchStatus" class="status"></div>
+    <div class="global-spinner" id="globalSpinner"></div>
+    <div class="container">
+        <div class="card" id="actionCard"></div>
+    </div>
+    <div class="footer">
+        Powered by <a href="https://shibarium.shib.io/" target="_blank">Shibarium</a> | ShibClub © 2025
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/web3@1.7.0/dist/web3.min.js"></script>
+    <script>
+        let web3, account;
+        const contractAddress = "0xf1eE43B9BA4ECF48A9A34869c14573db568B8836";
+        const boomV1Address = "0x493e6084f9373baF1D9BC85f82c2748a2459083b";
+        const boomV2Address = "0x6Bab1Cf1AD7504A47b85101C06faCAe956ab7aCB";
+        const shibarium = {
+            chainId: "0x6d",
+            chainName: "Shibarium",
+            nativeCurrency: { name: "BONE", symbol: "BONE", decimals: 18 },
+            rpcUrls: ["https://rpc.shibrpc.com", "https://www.shibrpc.com"],
+            blockExplorerUrls: ["https://shibariumscan.io"]
+        };
+        const contractAbi = [
+            {"inputs":[{"internalType":"address","name":"_boomV1","type":"address"},{"internalType":"address","name":"_boomV2","type":"address"}],"stateMutability":"nonpayable","type":"constructor"},
+            {"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"user","type":"address"},{"internalType":"uint256","name":"boomV1Amount","type":"uint256"},{"internalType":"uint256","name":"boomV2Amount","type":"uint256"}],"name":"Migrated","type":"event"},
+            {"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"owner","type":"address"},{"internalType":"uint256","name":"boomV2Amount","type":"uint256"}],"name":"Deposited","type":"event"},
+            {"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"owner","type":"address"}],"name":"Paused","type":"event"},
+            {"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"owner","type":"address"}],"name":"Unpaused","type":"event"},
+            {"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"owner","type":"address"},{"internalType":"uint256","name":"boomV1Amount","type":"uint256"},{"internalType":"uint256","name":"boomV2Amount","type":"uint256"}],"name":"Withdrawn","type":"event"},
+            {"inputs":[{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"depositBoomV2","outputs":[],"stateMutability":"nonpayable","type":"function"},
+            {"inputs":[],"name":"getContractBalances","outputs":[{"internalType":"uint256","name":"boomV1Balance","type":"uint256"},{"internalType":"uint256","name":"boomV2Balance","type":"uint256"}],"stateMutability":"view","type":"function"},
+            {"inputs":[{"internalType":"uint256","name":"boomV1Amount","type":"uint256"}],"name":"migrate","outputs":[],"stateMutability":"nonpayable","type":"function"},
+            {"inputs":[],"name":"pause","outputs":[],"stateMutability":"nonpayable","type":"function"},
+            {"inputs":[],"name":"unpause","outputs":[],"stateMutability":"nonpayable","type":"function"},
+            {"inputs":[],"name":"withdrawAll","outputs":[],"stateMutability":"nonpayable","type":"function"},
+            {"inputs":[],"name":"boomV1","outputs":[{"internalType":"contract IERC20","name":"","type":"address"}],"stateMutability":"view","type":"function"},
+            {"inputs":[],"name":"boomV2","outputs":[{"internalType":"contract IERC20","name":"","type":"address"}],"stateMutability":"view","type":"function"},
+            {"inputs":[],"name":"isActive","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"view","type":"function"},
+            {"inputs":[],"name":"owner","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"}
+        ];
+        const erc20Abi = [
+            {"inputs":[{"internalType":"address","name":"account","type":"address"}],"name":"balanceOf","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
+            {"inputs":[{"internalType":"address","name":"spender","type":"address"},{"internalType":"uint256","name":"value","type":"uint256"}],"name":"approve","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},
+            {"inputs":[{"internalType":"address","name":"owner","type":"address"},{"internalType":"address","name":"spender","type":"address"}],"name":"allowance","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"}
+        ];
+        const boomV1Logo = "https://woofswap.finance/image/tokens/boom.png";
+        const boomV2Logo = "https://woofswap.finance/image/tokens/boom.png";
+        const maxAllowance = "115792089237316195423570985008687907853269984665640564039457584007913129639935";
+
+        function shortenAddress(address) {
+            return address ? `${address.slice(0, 6)}...${address.slice(-4)}` : "0x...";
+        }
+
+        function showStatus(message, isError = false) {
+            const status = document.getElementById("searchStatus");
+            status.innerText = message;
+            status.style.color = isError ? "#FF4444" : "#FF8C00";
+            setTimeout(() => { status.innerText = ""; }, 5000);
+        }
+
+        async function tryInitializeWeb3() {
+            for (const rpc of shibarium.rpcUrls) {
+                try {
+                    web3 = new Web3(rpc);
+                    await web3.eth.getBlockNumber();
+                    return true;
+                } catch (e) {
+                    console.warn(`RPC ${rpc} failed: ${e.message}`);
+                }
+            }
+            return false;
+        }
+
+        async function connectWallet() {
+            try {
+                if (!window.ethereum) {
+                    showStatus("Please install MetaMask.", true);
+                    return;
+                }
+                document.getElementById("searchStatus").innerText = "Connecting...";
+                document.getElementById("globalSpinner").style.display = "block";
+                web3 = new Web3(window.ethereum);
+                const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
+                if (!accounts.length) {
+                    showStatus("Please unlock wallet.", true);
+                    return;
+                }
+                account = accounts[0];
+                const chainId = await web3.eth.getChainId();
+                if (Number(chainId) !== 109) {
+                    try {
+                        await window.ethereum.request({ method: "wallet_switchEthereumChain", params: [{ chainId: shibarium.chainId }] });
+                    } catch (switchError) {
+                        if (switchError.code === 4902) {
+                            await window.ethereum.request({ method: "wallet_addEthereumChain", params: [shibarium] });
+                        } else {
+                            throw switchError;
+                        }
+                    }
+                }
+                document.getElementById("connectWalletButton").innerText = shortenAddress(account);
+                showStatus("Connected to Shibarium");
+                await loadActionCard();
+            } catch (error) {
+                showStatus(`Connection failed: ${error.message}`, true);
+                resetUI();
+            } finally {
+                document.getElementById("globalSpinner").style.display = "none";
+            }
+        }
+
+        function resetUI() {
+            document.getElementById("connectWalletButton").innerText = "Connect Wallet";
+            document.getElementById("searchStatus").innerText = "";
+            const actionButton = document.querySelector(".action-button");
+            if (actionButton) actionButton.disabled = true;
+        }
+
+        async function loadActionCard() {
+            const status = document.getElementById("searchStatus");
+            const card = document.getElementById("actionCard");
+            const spinner = document.getElementById("globalSpinner");
+            try {
+                status.innerText = "Loading data...";
+                spinner.style.display = "block";
+                if (!web3 && !await tryInitializeWeb3()) {
+                    showStatus("Failed to connect to Shibarium.", true);
+                    return;
+                }
+                const contract = new web3.eth.Contract(contractAbi, contractAddress);
+                const boomV1Contract = new web3.eth.Contract(erc20Abi, boomV1Address);
+                const boomV2Contract = new web3.eth.Contract(erc20Abi, boomV2Address);
+                let boomV1Balance = "0";
+                let boomV2Balance = "0";
+                let contractBalances = { boomV1Balance: "0", boomV2Balance: "0" };
+                let isActive = false;
+                if (account) {
+                    boomV1Balance = await boomV1Contract.methods.balanceOf(account).call();
+                    boomV2Balance = await boomV2Contract.methods.balanceOf(account).call();
+                    contractBalances = await contract.methods.getContractBalances().call();
+                    isActive = await contract.methods.isActive().call();
+                }
+                const boomV1Display = parseFloat(web3.utils.fromWei(boomV1Balance, "ether")).toFixed(2);
+                const boomV2Display = parseFloat(web3.utils.fromWei(boomV2Balance, "ether")).toFixed(2);
+                const contractV1Display = parseFloat(web3.utils.fromWei(contractBalances.boomV1Balance, "ether")).toFixed(2);
+                const contractV2Display = parseFloat(web3.utils.fromWei(contractBalances.boomV2Balance, "ether")).toFixed(2);
+                card.dataset.boomV1Balance = boomV1Balance;
+                card.innerHTML = `
+                    <div class="card-header">
+                        <h3>BOOM Migration Contract</h3>
+                        <button class="copy-button" data-address="${contractAddress}">
+                            <img src="https://img.icons8.com/ios-filled/16/000000/contract.png" alt="Copy Contract">
+                            <span class="tooltip">Copied Contract</span>
+                        </button>
+                    </div>
+                    <div class="card-content">
+                        <h4>BOOMv1 to BOOMv2 Migration</h4>
+                        <p class="description">Migrate your BOOMv1 tokens to BOOMv2 at a 1:500,000 ratio. Only whole BOOMv1 tokens can be migrated.</p>
+                    </div>
+                    <div class="action-section">
+                        <div class="action-box">
+                            <h5>Migrate BOOMv1</h5>
+                            <div class="balance-row">
+                                <span>BOOMv1</span>
+                                <span id="boomV1Balance">Balance: ${boomV1Display} BOOMv1</span>
+                            </div>
+                            <div class="token-info">
+                                <img src="${boomV1Logo}" alt="BOOMv1">
+                                <span>BOOMv1</span>
+                            </div>
+                            <input type="number" id="migrateAmount" placeholder="1" step="1" min="1" value="1">
+                            <p class="stake-note" id="migrateNote">Note: Enter a whole number of BOOMv1 tokens (minimum 1).</p>
+                            <div class="percentage-buttons" id="migratePercentages">
+                                <button data-percentage="25">25%</button>
+                                <button data-percentage="50">50%</button>
+                                <button data-percentage="75">75%</button>
+                                <button data-percentage="100">MAX</button>
+                            </div>
+                            <button class="action-button" id="migrateButton" ${!account || !isActive ? 'disabled' : ''}>Migrate</button>
+                            <div class="balance-row" style="margin-top: 10px;">
+                                <span>Contract Balances</span>
+                                <span>${contractV1Display} BOOMv1 / ${contractV2Display} BOOMv2</span>
+                            </div>
+                            <p class="stake-note ${isActive ? '' : 'warning'}">${isActive ? 'Migration is active.' : 'Migration is paused.'}</p>
+                        </div>
+                    </div>
+                `;
+                setupCardListeners(card, contract);
+                showStatus();
+            } catch (e) {
+                showStatus(`Failed to load data: ${e.message}`, true);
+            } finally {
+                spinner.style.display = "none";
+            }
+        }
+
+        function setupCardListeners(card, contract) {
+            card.querySelectorAll(".copy-button").forEach(button => {
+                button.addEventListener("click", () => {
+                    navigator.clipboard.writeText(button.dataset.address).then(() => {
+                        button.classList.add("copied");
+                        setTimeout(() => button.classList.remove("copied"), 1000);
+                    }).catch(() => showStatus("Failed to copy address.", true));
+                });
+            });
+
+            const migrateInput = card.querySelector("#migrateAmount");
+            const migrateButton = card.querySelector("#migrateButton");
+
+            migrateInput.addEventListener("input", () => {
+                const amount = parseFloat(migrateInput.value);
+                const valid = account && amount >= 1 && Number.isInteger(amount);
+                migrateButton.disabled = !valid || !card.dataset.isActive;
+                if (!valid && amount) showStatus("Enter a whole number ≥ 1", true);
+            });
+
+            card.querySelectorAll("#migratePercentages button").forEach(button => {
+                button.addEventListener("click", async () => {
+                    card.querySelectorAll("#migratePercentages button").forEach(btn => btn.classList.remove("active"));
+                    button.classList.add("active");
+                    await setAmount(button.dataset.percentage, card);
+                });
+            });
+
+            migrateButton.addEventListener("click", async () => await migrateTokens(card, contract));
+        }
+
+        async function setAmount(percentage, card) {
+            if (!web3 || !account) {
+                showStatus("Please connect wallet.", true);
+                return;
+            }
+            const input = card.querySelector("#migrateAmount");
+            const balance = parseFloat(web3.utils.fromWei(card.dataset.boomV1Balance, "ether"));
+            const amount = percentage === "100" ? balance : balance * (percentage / 100);
+            input.value = Math.floor(amount);
+            const button = card.querySelector("#migrateButton");
+            button.disabled = !account || input.value < 1;
+        }
+
+        async function migrateTokens(card, contract) {
+            if (!web3 || !account) {
+                showStatus("Please connect wallet.", true);
+                return;
+            }
+            const amount = parseFloat(card.querySelector("#migrateAmount").value);
+            if (isNaN(amount) || amount < 1 || !Number.isInteger(amount)) {
+                showStatus("Enter a valid whole number ≥ 1.", true);
+                return;
+            }
+            const amountWei = web3.utils.toWei(amount.toString(), "ether");
+            const boomV1Contract = new web3.eth.Contract(erc20Abi, boomV1Address);
+            const balance = await boomV1Contract.methods.balanceOf(account).call();
+            if (web3.utils.toBN(balance).lt(web3.utils.toBN(amountWei))) {
+                showStatus("Insufficient BOOMv1 balance.", true);
+                return;
+            }
+            const contractBalances = await contract.methods.getContractBalances().call();
+            const requiredV2 = web3.utils.toWei((amount * 500000).toString(), "ether");
+            if (web3.utils.toBN(contractBalances.boomV2Balance).lt(web3.utils.toBN(requiredV2))) {
+                showStatus("Insufficient BOOMv2 in contract.", true);
+                return;
+            }
+            const allowance = await boomV1Contract.methods.allowance(account, contractAddress).call();
+            const button = card.querySelector("#migrateButton");
+            try {
+                button.classList.add("loading");
+                button.disabled = true;
+                if (web3.utils.toBN(allowance).lt(web3.utils.toBN(amountWei))) {
+                    showStatus("Approving BOOMv1...");
+                    await boomV1Contract.methods.approve(contractAddress, maxAllowance).send({ from: account });
+                }
+                showStatus("Processing migration...");
+                await contract.methods.migrate(amountWei).send({ from: account });
+                showStatus("Migration successful!");
+                await loadActionCard();
+            } catch (e) {
+                const msg = e.code === 4001 ? "User rejected transaction." : e.message.includes("revert") ? "Transaction reverted." : e.message;
+                showStatus(`Migration failed: ${msg}`, true);
+            } finally {
+                button.classList.remove("loading");
+                button.disabled = false;
+            }
+        }
+
+        document.getElementById("connectWalletButton").addEventListener("click", connectWallet);
+        window.addEventListener("load", async () => {
+            if (!window.location.protocol.includes("http")) {
+                showStatus('Please run via server (e.g., "npx serve").', true);
+                return;
+            }
+            if (await tryInitializeWeb3()) {
+                await loadActionCard();
+            } else {
+                showStatus("Failed to connect to Shibarium.", true);
+            }
+        });
+
+        window.ethereum?.on("accountsChanged", async accounts => {
+            if (!accounts.length) {
+                resetUI();
+                showStatus("Wallet disconnected.", true);
+            } else {
+                account = accounts[0];
+                document.getElementById("connectWalletButton").innerText = shortenAddress(account);
+                await loadActionCard();
+            }
+        });
+
+        window.ethereum?.on("chainChanged", connectWallet);
+    </script>
+</body>
+</html>
