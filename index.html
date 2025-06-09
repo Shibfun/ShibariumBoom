@@ -407,10 +407,10 @@
             {"inputs":[{"internalType":"address","name":"lpToken","type":"address"}],"name":"getRewardPerUnitPerBlock","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
             {"inputs":[{"internalType":"address","name":"_user","type":"address"}],"name":"getUserStake","outputs":[{"internalType":"address[]","name":"tokens","type":"address[]"},{"internalType":"uint256[]","name":"amounts","type":"uint256[]"},{"internalType":"uint256","name":"userStartBlock","type":"uint256"},{"internalType":"uint256","name":"totalReward","type":"uint256"}],"stateMutability":"view","type":"function"},
             {"inputs":[],"name":"getTotalStaked","outputs":[{"internalType":"address[]","name":"tokens","type":"address[]"},{"internalType":"uint256[]","name":"amounts","type":"uint256[]"}],"stateMutability":"view","type":"function"},
-            {"inputs":[],"name":"getRemainingRewards","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
             {"inputs":[{"internalType":"address","name":"owner","type":"address"},{"internalType":"address","name":"spender","type":"address"}],"name":"allowance","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
             {"inputs":[{"internalType":"address","name":"lpToken","type":"address"}],"name":"minStakeMultiple","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
-            {"inputs":[{"internalType":"address","name":"","type":"address"},{"internalType":"address","name":"","type":"address"}],"name":"userVotes","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"}
+            {"inputs":[{"internalType":"address","name":"","type":"address"},{"internalType":"address","name":"","type":"address"}],"name":"userVotes","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
+            {"inputs":[],"name":"totalSupply","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"}
         ];
         const erc20Abi = [
             {"inputs":[{"internalType":"address","name":"account","type":"address"}],"name":"balanceOf","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
@@ -525,8 +525,6 @@
                 let userStakes = { tokens: [], amounts: [], totalReward: "0" };
                 let userVotes = {};
                 let minStakeMultiples = {};
-                const remainingRewards = await contract.methods.getRemainingRewards().call();
-                const remainingRewardsDisplay = parseFloat(web3.utils.fromWei(remainingRewards, "ether")).toFixed(2);
                 if (account) {
                     tokenBalance = await contract.methods.balanceOf(account).call();
                     const stakeData = await contract.methods.getUserStake(account).call();
@@ -563,13 +561,13 @@
                     const node = nodes.find(n => n.address.toLowerCase() === token.toLowerCase());
                     return `<option value="${token}">${node.name}: ${parseFloat(web3.utils.fromWei(userStakes.amounts[i], "ether")).toFixed(2)}</option>`;
                 }).join("") : '<option value="">No stakes</option>';
-                let voteList = Object.entries(userVotes).filter(([_, votes]) => votes > 0).map(([name, votes]) => `<li>${name}: ${votes.toFixed(2)} BOOM</li>`).join("") || '<li>No votes</li>';
+                let voteList = nodes.filter(node => userVotes[node.name] > 0).map(node => `<li>${node.name}: ${parseFloat(userVotes[node.name]).toFixed(2)} BOOM</li>`).join("") || '<li>No votes</li>';
                 card.innerHTML = `
                     <div class="card-header">
                         <h3>BOOM Contract</h3>
                         <button class="copy-button" data-address="${contractAddress}">
                             <img src="https://img.icons8.com/ios-filled/16/000000/contract.png" alt="Copy Contract">
-                            <span class="tooltip">Copied Contract!</span>
+                            <span class="tooltip">Copied Contract</span>
                         </button>
                     </div>
                     <div class="card-content">
@@ -590,9 +588,9 @@
                             </div>
                             <div class="token-info">
                                 <img src="${nodes[0].logo}" alt="LP" id="lpLogo">
-                                <span id="lpSymbol">${nodes[0].name}</span>
+                                <span id="tokenSymbol">${nodes[0].name}</span>
                             </div>
-                            <input type="number" id="stakeAmount" class="amount-input" placeholder="0.0" step="0.01" min="0">
+                            <input type="number" id="stakeAmount" class="input" placeholder="0.0" step="0.01" min="0">
                             <p class="stake-note" id="stakeNote">Note: Rewards are calculated per ${nodes[0].minStake} LP portion, remainders are ignored.</p>
                             <div class="percentage-buttons" id="stakePercentages">
                                 <button data-percentage="25">25%</button>
@@ -601,15 +599,15 @@
                                 <button data-percentage="100">MAX</button>
                             </div>
                             <button class="action-button" id="stakeButton" disabled>Stake</button>
-                            <div class="select-box" style="margin-top: 12px;">
-                                <select id="unstakeToken">
+                            <div class="select-box" style="margin-top: 10px;">
+                                <select id="unstakeSelect">
                                     ${userStakesHtml}
                                 </select>
                             </div>
                             <button class="action-button" id="unstakeButton" ${userStakes.tokens.length ? '' : 'disabled'}>Unstake</button>
                         </div>
                         <div class="action-box">
-                            <h5>Vote / Cancel Vote</h5>
+                            <h5>Vote / Cancel</h5>
                             <div class="select-box">
                                 <select id="voteToken">
                                     ${stakeOptions}
@@ -623,15 +621,15 @@
                                 <img src="${boomLogo}" alt="BOOM">
                                 <span>BOOM</span>
                             </div>
-                            <input type="number" id="voteAmount" class="amount-input" placeholder="0.0" step="1" min="1">
-                            <div class="percentage-buttons" id="votePercentages">
+                            <input type="number" id="voteAmount" class="input" placeholder="0" step="1" min="1" value="1">
+                            <div class="percentage-buttons" id="voteButtons">
                                 <button data-percentage="25">25%</button>
                                 <button data-percentage="50">50%</button>
                                 <button data-percentage="75">75%</button>
                                 <button data-percentage="100">MAX</button>
                             </div>
-                            <button class="action-button" id="voteButton" disabled>Vote</button>
-                            <div class="select-box" style="margin-top: 12px;">
+                            <button class="action-button" id="voteButton">Vote</button>
+                            <div class="select-box" style="margin-top: 10px;">
                                 <select id="cancelVoteToken">
                                     ${stakeOptions}
                                 </select>
@@ -663,9 +661,9 @@
                 `;
                 setupCardListeners(card, contract);
                 await updateLPBalance(card, contract);
-                showStatus("");
-            } catch (error) {
-                showStatus(`Failed to load: ${error.message}`, true);
+                showStatus();
+            } catch (e) {
+                showStatus(`Failed to load: ${e.message}`, true);
             } finally {
                 spinner.style.display = "none";
             }
@@ -678,7 +676,7 @@
             const balance = await tokenContract.methods.balanceOf(account).call();
             const node = nodes.find(n => n.address.toLowerCase() === token.toLowerCase());
             card.querySelector("#lpBalance").innerText = `Balance: ${parseFloat(web3.utils.fromWei(balance, "ether")).toFixed(2)}`;
-            card.querySelector("#lpSymbol").innerText = node.name;
+            card.querySelector("#tokenSymbol").innerText = node.name;
             card.querySelector("#lpLogo").src = node.logo;
             card.querySelector("#stakeNote").innerText = `Note: Rewards are calculated per ${node.minStake} LP portion, remainders are ignored.`;
         }
@@ -689,9 +687,7 @@
                     navigator.clipboard.writeText(button.dataset.address).then(() => {
                         button.classList.add("copied");
                         setTimeout(() => button.classList.remove("copied"), 1000);
-                    }).catch(() => {
-                        showStatus("Failed to copy address.", true);
-                    });
+                    }).catch(() => showStatus("Failed to copy address.", true));
                 });
             });
 
@@ -701,42 +697,45 @@
             const unstakeButton = card.querySelector("#unstakeButton");
             const voteButton = card.querySelector("#voteButton");
             const cancelVoteButton = card.querySelector("#cancelVoteButton");
-            const claimRewardsButton = card.querySelector("#claimRewardsButton");
-            const stakeTokenSelect = card.querySelector("#stakeToken");
-            const voteTokenSelect = card.querySelector("#voteToken");
-            const cancelVoteTokenSelect = card.querySelector("#cancelVoteToken");
+            const claimRewardsButton = card.querySelector("#claimRewards");
+            const stakeToken = card.querySelector("#stakeToken");
+            const voteToken = card.querySelector("#voteToken");
+            const cancelVoteToken = card.querySelector("#cancelVoteToken");
 
-            stakeTokenSelect.addEventListener("change", () => updateLPBalance(card, contract));
-            cancelVoteTokenSelect.addEventListener("change", async () => {
-                const token = cancelVoteTokenSelect.value;
+            stakeToken.addEventListener("change", () => updateLPBalance(card, contract));
+            cancelVoteToken.addEventListener("change", async () => {
+                const token = cancelVoteToken.value;
                 const votes = await contract.methods.userVotes(account, token).call();
                 cancelVoteButton.disabled = !account || parseFloat(web3.utils.fromWei(votes, "ether")) <= 0;
             });
 
             stakeInput.addEventListener("input", () => {
                 const amount = parseFloat(stakeInput.value);
-                const minStake = parseFloat(stakeTokenSelect.selectedOptions[0].dataset.minStake);
+                const minStake = parseFloat(stakeToken.selectedOptions[0].dataset.minStake);
                 stakeButton.disabled = !account || !amount || amount <= 0 || amount < minStake;
             });
 
             voteInput.addEventListener("input", () => {
                 const amount = parseFloat(voteInput.value);
-                voteButton.disabled = !account || !amount || amount < 1 || amount % 1 !== 0;
+                console.log("Vote input:", { amount, account });
+                const valid = account && amount >= 1 && Number.isInteger(amount);
+                voteButton.disabled = !valid;
+                if (!valid) showStatus("Enter a whole number ≥ 1", true);
             });
 
             card.querySelectorAll("#stakePercentages button").forEach(button => {
                 button.addEventListener("click", () => {
-                    card.querySelectorAll("#stakePercentages button").forEach(btn => btn.classList.remove("active"));
+                    card.querySelectorAll("#stakeButtons button").forEach(btn => btn.classList.remove("active"));
                     button.classList.add("active");
-                    setAmount(card, button.dataset.percentage, "stake");
+                    setAmount(button.dataset.percentage, "stake");
                 });
             });
 
-            card.querySelectorAll("#votePercentages button").forEach(button => {
+            card.querySelectorAll("#voteButtons button").forEach(button => {
                 button.addEventListener("click", () => {
-                    card.querySelectorAll("#votePercentages button").forEach(btn => btn.classList.remove("active"));
+                    card.querySelectorAll("#voteButtons button").forEach(btn => btn.classList.remove("active"));
                     button.classList.add("active");
-                    setAmount(card, button.dataset.percentage, "vote");
+                    setAmount(button.dataset.percentage, "vote");
                 });
             });
 
@@ -759,6 +758,9 @@
             claimRewardsButton.addEventListener("click", async () => {
                 await claimRewards(card, contract);
             });
+
+            voteInput.value = "1";
+            voteInput.dispatchEvent(new Event("input"));
         }
 
         async function setAmount(card, percentage, type) {
@@ -781,10 +783,11 @@
                 const minStake = parseFloat(card.querySelector("#stakeToken").selectedOptions[0].dataset.minStake);
                 amount = Math.floor(amount / minStake) * minStake;
             }
-            input.value = amount.toFixed(type === "vote" ? 0 : 4);
+            input.value = amount.toFixed(type === "vote" ? 0 : 2);
             const button = card.querySelector(`#${type}Button`);
-            const minStake = type === "stake" ? parseFloat(card.querySelector("#stakeToken").selectedOptions[0].dataset.minStake) : 0;
-            button.disabled = !account || !amount || (type === "vote" && (amount < 1 || amount % 1 !== 0)) || (type === "stake" && amount < minStake);
+            const minStake = type === "stake" ? parseFloat(card.querySelector(`#${type}Token`).selectedOptions[0].dataset.minStake) : 0;
+            button.disabled = !account || amount <= 0 || (type === "vote" && amount < 1) || (type === "stake" && amount < minStake);
+            console.log(`Set ${type} amount:`, { amount, disabled: button.disabled });
         }
 
         async function stakeLP(card, contract) {
@@ -805,7 +808,7 @@
             }
             const portions = Math.floor(amount / minStake);
             if (amount % minStake !== 0) {
-                showStatus(`Warning: Only ${portions * minStake} LP will count toward rewards. Remainder ignored.`, true);
+                showStatus(`Warning: Only ${portions * minStake} LP will count toward rewards.`, true);
                 card.querySelector("#stakeNote").classList.add("warning");
             } else {
                 card.querySelector("#stakeNote").classList.remove("warning");
@@ -813,7 +816,7 @@
             let amountWei;
             try {
                 amountWei = web3.utils.toWei(amount.toString(), "ether");
-            } catch (e) {
+            } catch {
                 showStatus("Invalid amount entered.", true);
                 return;
             }
@@ -841,11 +844,9 @@
                 await contract.methods.stakeLP(token, amountWei).send({ from: account });
                 showStatus("Stake successful!");
                 await loadActionCard();
-            } catch (error) {
-                let errorMessage = error.message || "Transaction failed.";
-                if (error.code === 4001) errorMessage = "User rejected transaction.";
-                else if (error.message.includes("revert")) errorMessage = "Transaction reverted. Check contract requirements.";
-                showStatus(errorMessage, true);
+            } catch (e) {
+                const msg = e.code === 4001 ? "User rejected transaction." : e.message.includes("revert") ? "Transaction reverted." : e.message;
+                showStatus(`Stake failed: ${msg}`, true);
             } finally {
                 button.classList.remove("loading");
                 button.disabled = false;
@@ -857,7 +858,7 @@
                 showStatus("Please connect wallet.", true);
                 return;
             }
-            const token = card.querySelector("#unstakeToken").value;
+            const token = card.querySelector("#unstakeSelect").value;
             if (!token) {
                 showStatus("No stakes to unstake.", true);
                 return;
@@ -870,11 +871,9 @@
                 await contract.methods.unstakeLP(token).send({ from: account });
                 showStatus("Unstake successful!");
                 await loadActionCard();
-            } catch (error) {
-                let errorMessage = error.message || "Transaction failed.";
-                if (error.code === 4001) errorMessage = "User rejected transaction.";
-                else if (error.message.includes("revert")) errorMessage = "No staked LP tokens.";
-                showStatus(errorMessage, true);
+            } catch (e) {
+                const msg = e.code === 4001 ? "User rejected transaction." : e.message.includes("revert") ? "No staked LP tokens." : e.message;
+                showStatus(`Unstake failed: ${msg}`, true);
             } finally {
                 button.classList.remove("loading");
                 button.disabled = false;
@@ -888,14 +887,14 @@
             }
             const token = card.querySelector("#voteToken").value;
             const amount = parseFloat(card.querySelector("#voteAmount").value);
-            if (!amount || amount < 1 || amount % 1 !== 0) {
-                showStatus("Please enter a valid vote amount (minimum 1, whole number).", true);
+            if (!amount || amount < 1 || !Number.isInteger(amount)) {
+                showStatus("Enter a valid vote amount (minimum 1, whole number).", true);
                 return;
             }
             let amountWei;
             try {
                 amountWei = web3.utils.toWei(amount.toString(), "ether");
-            } catch (e) {
+            } catch {
                 showStatus("Invalid amount entered.", true);
                 return;
             }
@@ -908,7 +907,7 @@
             const nodeVotes = await contract.methods.getNodeVotes(token).call();
             const maxVoteLimit = web3.utils.toBN(totalSupply).div(web3.utils.toBN(10));
             if (web3.utils.toBN(nodeVotes).add(web3.utils.toBN(amountWei)).gt(maxVoteLimit)) {
-                showStatus("Vote amount exceeds node vote limit (10% of total supply).", true);
+                showStatus("Vote exceeds node vote limit (10% of total supply).", true);
                 return;
             }
             const isValid = await contract.methods.isValidLPToken(token).call();
@@ -924,11 +923,9 @@
                 await contract.methods.vote(token, amountWei).send({ from: account });
                 showStatus("Vote successful!");
                 await loadActionCard();
-            } catch (error) {
-                let errorMessage = error.message || "Transaction failed.";
-                if (error.code === 4001) errorMessage = "User rejected transaction.";
-                else if (error.message.includes("revert")) errorMessage = "Transaction reverted. Check requirements.";
-                showStatus(errorMessage, true);
+            } catch (e) {
+                const msg = e.code === 4001 ? "User rejected transaction." : e.message.includes("revert") ? "Transaction reverted." : e.message;
+                showStatus(`Vote failed: ${msg}`, true);
             } finally {
                 button.classList.remove("loading");
                 button.disabled = false;
@@ -954,11 +951,9 @@
                 await contract.methods.cancelVote(token).send({ from: account });
                 showStatus("Vote cancellation successful!");
                 await loadActionCard();
-            } catch (error) {
-                let errorMessage = error.message || "Transaction failed.";
-                if (error.code === 4001) errorMessage = "User rejected transaction.";
-                else if (error.message.includes("revert")) errorMessage = "No votes to cancel.";
-                showStatus(errorMessage, true);
+            } catch (e) {
+                const msg = e.code === 4001 ? "User rejected transaction." : e.message.includes("revert") ? "No votes to cancel." : e.message;
+                showStatus(`Cancel vote failed: ${msg}`, true);
             } finally {
                 button.classList.remove("loading");
                 button.disabled = false;
@@ -983,11 +978,9 @@
                 await contract.methods.claimRewards().send({ from: account });
                 showStatus("Rewards claimed successfully!");
                 await loadActionCard();
-            } catch (error) {
-                let errorMessage = error.message || "Transaction failed.";
-                if (error.code === 4001) errorMessage = "User rejected transaction.";
-                else if (error.message.includes("revert")) errorMessage = "No rewards available or no staked LP tokens.";
-                showStatus(errorMessage, true);
+            } catch (e) {
+                const msg = e.code === 4001 ? "User rejected transaction." : e.message.includes("revert") ? "No rewards available." : e.message;
+                showStatus(`Claim failed: ${msg}`, true);
             } finally {
                 button.classList.remove("loading");
                 button.disabled = false;
@@ -1007,8 +1000,8 @@
             }
         });
 
-        window.ethereum?.on("accountsChanged", async (accounts) => {
-            if (accounts.length === 0) {
+        window.ethereum?.on("accountsChanged", async accounts => {
+            if (!accounts.length) {
                 resetUI();
                 showStatus("Wallet disconnected.", true);
             } else {
@@ -1018,9 +1011,7 @@
             }
         });
 
-        window.ethereum?.on("chainChanged", async () => {
-            await connectWallet();
-        });
+        window.ethereum?.on("chainChanged", connectWallet);
     </script>
 </body>
 </html>
