@@ -27,7 +27,7 @@
             margin-bottom: 24px;
         }
         .header h1 {
-            font-size: clamp(2em, 5vw, 2.5em);
+            font-size: clamp(1.8rem, 5vw, 2.5rem);
             font-weight: 700;
             color: #FF8C00;
             letter-spacing: 1px;
@@ -43,7 +43,7 @@
             border-radius: 24px;
             font-weight: 600;
             cursor: pointer;
-            font-size: 1em;
+            font-size: 1rem;
             transition: transform 0.2s, background 0.3s;
         }
         .connect-section button:hover {
@@ -77,7 +77,7 @@
             border-bottom: 1px solid #333;
         }
         .card-header h3 {
-            font-size: 1.1em;
+            font-size: 1.1rem;
             font-weight: 600;
             flex-grow: 1;
             color: #E0E0E0;
@@ -98,7 +98,7 @@
             visibility: hidden;
             background: #FF8C00;
             color: #FFF;
-            font-size: 0.8em;
+            font-size: 0.8rem;
             padding: 4px 8px;
             border-radius: 4px;
             position: absolute;
@@ -116,13 +116,13 @@
             flex-grow: 1;
         }
         .card-content h4 {
-            font-size: 1.4em;
+            font-size: 1.4rem;
             font-weight: 600;
             margin-bottom: 12px;
             color: #FF8C00;
         }
         .card-content p.description {
-            font-size: 0.9em;
+            font-size: 0.9rem;
             color: #B0B0B0;
             margin-bottom: 16px;
             line-height: 1.5;
@@ -138,7 +138,7 @@
             margin-bottom: 16px;
         }
         .action-box h5 {
-            font-size: 1.1em;
+            font-size: 1.1rem;
             font-weight: 600;
             color: #FF8C00;
             margin-bottom: 12px;
@@ -153,13 +153,13 @@
             border: 1px solid #333;
             border-radius: 8px;
             color: #E0E0E0;
-            font-size: 0.9em;
+            font-size: 0.9rem;
             outline: none;
         }
         .balance-row {
             display: flex;
             justify-content: space-between;
-            font-size: 0.85em;
+            font-size: 0.85rem;
             margin-bottom: 8px;
             color: #FF8C00;
         }
@@ -177,7 +177,7 @@
             margin-right: 8px;
         }
         .token-info span {
-            font-size: 0.9em;
+            font-size: 0.9rem;
             color: #E0E0E0;
         }
         .action-box input {
@@ -185,9 +185,9 @@
             padding: 10px;
             background: #1E1E1E;
             border: 1px solid #333;
-            border-radius: 8px;
+            border,XAI Response: border-radius: 8px;
             color: #E0E0E0;
-            font-size: 0.9em;
+            font-size: 0.9rem;
             text-align: right;
             outline: none;
         }
@@ -204,7 +204,7 @@
             border-radius: 8px;
             cursor: pointer;
             color: #E0E0E0;
-            font-size: 0.85em;
+            font-size: 0.85rem;
             font-weight: 600;
             height: 36px;
             display: flex;
@@ -231,7 +231,7 @@
             cursor: pointer;
             font-weight: 600;
             width: 100%;
-            font-size: 0.9em;
+            font-size: 0.9rem;
             position: relative;
             transition: background 0.3s;
         }
@@ -264,7 +264,7 @@
         .node-info table {
             width: 100%;
             border-collapse: collapse;
-            font-size: 0.85em;
+            font-size: 0.85rem;
             color: #E0E0E0;
         }
         .node-info th, .node-info td {
@@ -283,7 +283,7 @@
             border-radius: 8px;
         }
         .vote-info h5 {
-            font-size: 1.1em;
+            font-size: 1.1rem;
             font-weight: 600;
             color: #FF8C00;
             margin-bottom: 8px;
@@ -295,6 +295,7 @@
             display: flex;
             justify-content: space-between;
             padding: 4px 0;
+            font-size: 0.85rem;
         }
         .global-spinner {
             border: 4px solid #FF8C00;
@@ -311,13 +312,13 @@
             100% { transform: rotate(360deg); }
         }
         .status {
-            font-size: 0.9em;
+            font-size: 0.9rem;
             color: #FF8C00;
             text-align: center;
             margin: 12px 0;
         }
         .stake-note {
-            font-size: 0.85em;
+            font-size: 0.85rem;
             color: #FFA500;
             margin-top: 8px;
             text-align: left;
@@ -327,7 +328,7 @@
             font-weight: 600;
         }
         .footer {
-            font-size: 0.8em;
+            font-size: 0.8rem;
             color: #B0B0B0;
             text-align: center;
             margin-top: auto;
@@ -346,19 +347,19 @@
                 padding: 12px;
             }
             .header h1 {
-                font-size: 1.8em;
+                font-size: 1.8rem;
             }
             .card {
                 max-width: 100%;
             }
             .card-header h3 {
-                font-size: 1em;
+                font-size: 1rem;
             }
             .card-content h4 {
-                font-size: 1.2em;
+                font-size: 1.2rem;
             }
             .card-content p.description {
-                font-size: 0.85em;
+                font-size: 0.85rem;
             }
             .percentage-buttons {
                 grid-template-columns: repeat(2, 1fr);
@@ -385,7 +386,7 @@
     <script src="https://cdn.jsdelivr.net/npm/web3@1.7.0/dist/web3.min.js"></script>
     <script>
         let web3, account;
-        const contractAddress = "0x61142dF21c283a749FB92d90D52035e0FC096f98";
+        const contractAddress = "0x6Bab1Cf1AD7504A47b85101C06faCAe956ab7aCB";
         const shibarium = {
             chainId: "0x6d",
             chainName: "Shibarium",
@@ -418,23 +419,23 @@
             {"inputs":[{"internalType":"address","name":"owner","type":"address"},{"internalType":"address","name":"spender","type":"address"}],"name":"allowance","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"}
         ];
         const nodes = [
-            { name: "DAMN", address: "0x615B17bD8dB63Baf64025Dc070B54EdcEca7A123", logo: "https://woofswap.finance/image/tokens/DAMN.png", minStake: "233" },
-            { name: "FEED", address: "0xD4301bA08076C14Dfc93fd0a94151E338874D7FE", logo: "https://woofswap.finance/image/tokens/feed.png", minStake: "19272" },
-            { name: "WOOF", address: "0xE7481D3BB7ae1f11E17D64244102044922Cf565F", logo: "https://woofswap.finance/image/tokens/WOOF.png", minStake: "16" },
-            { name: "CHIKA", address: "0x4930Ba3d49d277e7832a7Eb33E56B2C2fA8Bd15a", logo: "https://woofswap.finance/image/tokens/ChikaLogo.png", minStake: "88710" },
-            { name: "WOW", address: "0x85F893b08718C735b71069020a33C2beAFF3cA7C", logo: "https://woofswap.finance/image/tokens/wow.png", minStake: "508" },
-            { name: "SHIPA", address: "0xBd46DAFD4613B22A8ea84C4Af1B283C0387ACE8a", logo: "https://woofswap.finance/image/tokens/shipa.png", minStake: "993" },
-            { name: "LUISA", address: "0x95e48cee32dBcEF91Fb99Db4c1Af3Ba7Ef798CB5", logo: "https://woofswap.finance/image/tokens/luisa.png", minStake: "51" },
-            { name: "NONE", address: "0xBa6C89E95a9ADc069Ce808Bca5D544F1afb6F720", logo: "https://woofswap.finance/image/tokens/none.png", minStake: "2604" },
-            { name: "SHY", address: "0x440470083719BDB64d0bE5C6DC37452eecf33aC0", logo: "https://woofswap.finance/image/tokens/guy.png", minStake: "70439" },
-            { name: "NEKO", address: "0x078Af49C3242A6815b103AB6c089662E1A067150", logo: "https://woofswap.finance/image/tokens/neko.png", minStake: "15831" },
-            { name: "SHIBS", address: "0xcC4202C10001346397Fa88C27ADB66b8C27a81F2", logo: "https://woofswap.finance/image/tokens/shibss.png", minStake: "52996" },
-            { name: "TOYS", address: "0x0518642FD7E7d43555B6D094aC23BE60856F6e56", logo: "https://woofswap.finance/image/tokens/toys.png", minStake: "85546" },
-            { name: "USAGI", address: "0xAc8c7ac9431d5f48918aC8FA6a231540818EC1aA", logo: "https://woofswap.finance/image/tokens/Usagi.png", minStake: "27676" },
-            { name: "CANNED", address: "0xC2Cf32cDf6Fa7Df6E2920E4C864F19D326FA0d67", logo: "https://woofswap.finance/image/tokens/CANNED.png", minStake: "13823" },
-            { name: "DUDU", address: "0xe5b06461c770Bc7b7eDFe49A16512cE5fCe54A90", logo: "https://woofswap.finance/image/tokens/dudu.png", minStake: "148" },
-            { name: "MSGA", address: "0x863e45b761003E4c95E90971E3ef994ee19Faf63", logo: "https://woofswap.finance/image/tokens/msga.png", minStake: "130" },
-            { name: "PIKA", address: "0x42C75D4f7518e91B78b7d27898562D38E726f61D", logo: "https://woofswap.finance/image/tokens/PIKA.png", minStake: "502" }
+            { name: "DAMN", address: "0x615B17bD8dB63Baf64025Dc070B54EdcEca7A123", logo: "https://woofswap.finance/image/tokens/DAMN.png" },
+            { name: "FEED", address: "0xD4301bA08076C14Dfc93fd0a94151E338874D7FE", logo: "https://woofswap.finance/image/tokens/feed.png" },
+            { name: "WOOF", address: "0xE7481D3BB7ae1f11E17D64244102044922Cf565F", logo: "https://woofswap.finance/image/tokens/WOOF.png" },
+            { name: "CHIKA", address: "0x4930Ba3d49d277e7832a7Eb33E56B2C2fA8Bd15a", logo: "https://woofswap.finance/image/tokens/ChikaLogo.png" },
+            { name: "WOW", address: "0x85F893b08718C735b71069020a33C2beAFF3cA7C", logo: "https://woofswap.finance/image/tokens/wow.png" },
+            { name: "SHIPA", address: "0xBd46DAFD4613B22A8ea84C4Af1B283C0387ACE8a", logo: "https://woofswap.finance/image/tokens/shipa.png" },
+            { name: "LUISA", address: "0x95e48cee32dBcEF91Fb99Db4c1Af3Ba7Ef798CB5", logo: "https://woofswap.finance/image/tokens/luisa.png" },
+            { name: "NONE", address: "0xBa6C89E95a9ADc069Ce808Bca5D544F1afb6F720", logo: "https://woofswap.finance/image/tokens/none.png" },
+            { name: "SHY", address: "0x440470083719BDB64d0bE5C6DC37452eecf33aC0", logo: "https://woofswap.finance/image/tokens/guy.png" },
+            { name: "NEKO", address: "0x078Af49C3242A6815b103AB6c089662E1A067150", logo: "https://woofswap.finance/image/tokens/neko.png" },
+            { name: "SHIBS", address: "0xcC4202C10001346397Fa88C27ADB66b8C27a81F2", logo: "https://woofswap.finance/image/tokens/shibss.png" },
+            { name: "TOYS", address: "0x0518642FD7E7d43555B6D094aC23BE60856F6e56", logo: "https://woofswap.finance/image/tokens/toys.png" },
+            { name: "USAGI", address: "0xAc8c7ac9431d5f48918aC8FA6a231540818EC1aA", logo: "https://woofswap.finance/image/tokens/Usagi.png" },
+            { name: "CANNED", address: "0xC2Cf32cDf6Fa7Df6E2920E4C864F19D326FA0d67", logo: "https://woofswap.finance/image/tokens/CANNED.png" },
+            { name: "DUDU", address: "0xe5b06461c770Bc7b7eDFe49A16512cE5fCe54A90", logo: "https://woofswap.finance/image/tokens/dudu.png" },
+            { name: "MSGA", address: "0x863e45b761003E4c95E90971E3ef994ee19Faf63", logo: "https://woofswap.finance/image/tokens/msga.png" },
+            { name: "PIKA", address: "0x42C75D4f7518e91B78b7d27898562D38E726f61D", logo: "https://woofswap.finance/image/tokens/PIKA.png" }
         ];
         const boomLogo = "https://woofswap.finance/image/tokens/boom.png";
         const maxAllowance = "115792089237316195423570985008687907853269984665640564039457584007913129639935";
@@ -447,7 +448,7 @@
             const status = document.getElementById("searchStatus");
             status.innerText = message;
             status.style.color = isError ? "#FF4444" : "#FF8C00";
-            setTimeout(() => { status.innerText = ""; status.style.color = "#FF8C00"; }, 5000);
+            setTimeout(() => { status.innerText = ""; }, 5000);
         }
 
         async function tryInitializeWeb3() {
@@ -464,13 +465,12 @@
         }
 
         async function connectWallet() {
-            const status = document.getElementById("searchStatus");
             try {
                 if (!window.ethereum) {
                     showStatus("Please install MetaMask.", true);
                     return;
                 }
-                status.innerText = "Connecting...";
+                document.getElementById("searchStatus").innerText = "Connecting...";
                 document.getElementById("globalSpinner").style.display = "block";
                 web3 = new Web3(window.ethereum);
                 const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
@@ -514,7 +514,7 @@
             const card = document.getElementById("actionCard");
             const spinner = document.getElementById("globalSpinner");
             try {
-                status.innerText = "Loading...";
+                status.innerText = "Loading data...";
                 spinner.style.display = "block";
                 if (!web3 && !await tryInitializeWeb3()) {
                     showStatus("Failed to connect to Shibarium.", true);
@@ -535,33 +535,37 @@
                     };
                     for (const node of nodes) {
                         const votes = await contract.methods.userVotes(account, node.address).call();
-                        userVotes[node.name] = parseFloat(web3.utils.fromWei(votes, "ether"));
+                        userVotes[node.address] = web3.utils.fromWei(votes, "ether");
                         const minStake = await contract.methods.minStakeMultiple(node.address).call();
-                        minStakeMultiples[node.address] = parseFloat(web3.utils.fromWei(minStake, "ether"));
+                        minStakeMultiples[node.address] = web3.utils.fromWei(minStake, "ether");
                     }
                 }
                 const nodeData = await Promise.all(nodes.map(async node => {
                     const votes = await contract.methods.getNodeVotes(node.address).call();
                     const reward = await contract.methods.getRewardPerUnitPerBlock(node.address).call();
-                    return { name: node.name, votes, reward: parseFloat(web3.utils.fromWei(reward, "ether")) };
+                    return {
+                        name: node.name,
+                        votes: web3.utils.fromWei(votes, "ether"),
+                        reward: web3.utils.fromWei(reward, "ether")
+                    };
                 }));
-                const tokenBalanceDisplay = account ? parseFloat(web3.utils.fromWei(tokenBalance, "ether")).toFixed(2) : "0";
-                const pendingRewards = account ? parseFloat(web3.utils.fromWei(userStakes.totalReward, "ether")).toFixed(2) : "0";
+                const tokenBalanceDisplay = parseFloat(web3.utils.fromWei(tokenBalance, "ether")).toFixed(2);
+                const pendingRewards = parseFloat(web3.utils.fromWei(userStakes.totalReward, "ether")).toFixed(2);
                 card.dataset.tokenBalance = tokenBalance;
                 card.dataset.minStakeMultiples = JSON.stringify(minStakeMultiples);
-                let stakeOptions = nodes.map(node => `<option value="${node.address}" data-min-stake="${node.minStake}">${node.name} (Min: ${node.minStake} LP)</option>`).join("");
+                let stakeOptions = nodes.map(node => `<option value="${node.address}" data-min-stake="${minStakeMultiples[node.address]}">${node.name} (Min: ${parseFloat(minStakeMultiples[node.address]).toFixed(2)} LP)</option>`).join("");
                 let nodeTable = nodeData.map(node => `
                     <tr>
                         <td>${node.name}</td>
-                        <td>${parseFloat(web3.utils.fromWei(node.votes, "ether")).toFixed(2)}</td>
-                        <td>${node.reward.toFixed(3)}</td>
+                        <td>${parseFloat(node.votes).toFixed(2)}</td>
+                        <td>${parseFloat(node.reward).toFixed(3)}</td>
                     </tr>
                 `).join("");
                 let userStakesHtml = userStakes.tokens.length ? userStakes.tokens.map((token, i) => {
                     const node = nodes.find(n => n.address.toLowerCase() === token.toLowerCase());
-                    return `<option value="${token}">${node.name}: ${parseFloat(web3.utils.fromWei(userStakes.amounts[i], "ether")).toFixed(2)}</option>`;
+                    return `<option value="${token}">${node.name}: ${parseFloat(web3.utils.fromWei(userStakes.amounts[i], "ether")).toFixed(2)} LP</option>`;
                 }).join("") : '<option value="">No stakes</option>';
-                let voteList = nodes.filter(node => userVotes[node.name] > 0).map(node => `<li>${node.name}: ${parseFloat(userVotes[node.name]).toFixed(2)} BOOM</li>`).join("") || '<li>No votes</li>';
+                let voteList = nodes.filter(node => parseFloat(userVotes[node.address]) > 0).map(node => `<li>${node.name}: ${parseFloat(userVotes[node.address]).toFixed(2)} BOOM</li>`).join("") || '<li>No votes</li>';
                 card.innerHTML = `
                     <div class="card-header">
                         <h3>BOOM Contract</h3>
@@ -572,7 +576,7 @@
                     </div>
                     <div class="card-content">
                         <h4>BOOM Staking & Voting</h4>
-                        <p class="description">Stake LP tokens, vote for nodes, and earn rewards on Shibarium. Rewards are calculated based on complete portions of the minimum stake, remainders are ignored.</p>
+                        <p class="description">Stake LP tokens, vote for nodes, and earn BOOM rewards on Shibarium. Rewards are calculated based on complete portions of the minimum stake.</p>
                     </div>
                     <div class="action-section">
                         <div class="action-box">
@@ -584,14 +588,14 @@
                             </div>
                             <div class="balance-row">
                                 <span>LP Token</span>
-                                <span id="lpBalance">Balance: 0</span>
+                                <span id="lpBalance">Balance: 0.00</span>
                             </div>
                             <div class="token-info">
                                 <img src="${nodes[0].logo}" alt="LP" id="lpLogo">
                                 <span id="tokenSymbol">${nodes[0].name}</span>
                             </div>
-                            <input type="number" id="stakeAmount" class="input" placeholder="0.0" step="0.01" min="0">
-                            <p class="stake-note" id="stakeNote">Note: Rewards are calculated per ${nodes[0].minStake} LP portion, remainders are ignored.</p>
+                            <input type="number" id="stakeAmount" placeholder="0.00" step="0.01" min="0">
+                            <p class="stake-note" id="stakeNote">Note: Rewards calculated per ${parseFloat(minStakeMultiples[nodes[0].address]).toFixed(2)} LP portion.</p>
                             <div class="percentage-buttons" id="stakePercentages">
                                 <button data-percentage="25">25%</button>
                                 <button data-percentage="50">50%</button>
@@ -615,20 +619,20 @@
                             </div>
                             <div class="balance-row">
                                 <span>BOOM</span>
-                                <span>Balance: ${tokenBalanceDisplay}</span>
+                                <span>Balance: ${tokenBalanceDisplay} BOOM</span>
                             </div>
                             <div class="token-info">
                                 <img src="${boomLogo}" alt="BOOM">
                                 <span>BOOM</span>
                             </div>
-                            <input type="number" id="voteAmount" class="input" placeholder="0" step="1" min="1" value="1">
+                            <input type="number" id="voteAmount" placeholder="1" step="1" min="1" value="1">
                             <div class="percentage-buttons" id="voteButtons">
                                 <button data-percentage="25">25%</button>
                                 <button data-percentage="50">50%</button>
                                 <button data-percentage="75">75%</button>
                                 <button data-percentage="100">MAX</button>
                             </div>
-                            <button class="action-button" id="voteButton">Vote</button>
+                            <button class="action-button" id="voteButton" disabled>Vote</button>
                             <div class="select-box" style="margin-top: 10px;">
                                 <select id="cancelVoteToken">
                                     ${stakeOptions}
@@ -663,7 +667,7 @@
                 await updateLPBalance(card, contract);
                 showStatus();
             } catch (e) {
-                showStatus(`Failed to load: ${e.message}`, true);
+                showStatus(`Failed to load data: ${e.message}`, true);
             } finally {
                 spinner.style.display = "none";
             }
@@ -675,10 +679,11 @@
             const tokenContract = new web3.eth.Contract(erc20Abi, token);
             const balance = await tokenContract.methods.balanceOf(account).call();
             const node = nodes.find(n => n.address.toLowerCase() === token.toLowerCase());
-            card.querySelector("#lpBalance").innerText = `Balance: ${parseFloat(web3.utils.fromWei(balance, "ether")).toFixed(2)}`;
+            const minStake = JSON.parse(card.dataset.minStakeMultiples)[token];
+            card.querySelector("#lpBalance").innerText = `Balance: ${parseFloat(web3.utils.fromWei(balance, "ether")).toFixed(2)} LP`;
             card.querySelector("#tokenSymbol").innerText = node.name;
             card.querySelector("#lpLogo").src = node.logo;
-            card.querySelector("#stakeNote").innerText = `Note: Rewards are calculated per ${node.minStake} LP portion, remainders are ignored.`;
+            card.querySelector("#stakeNote").innerText = `Note: Rewards calculated per ${parseFloat(minStake).toFixed(2)} LP portion.`;
         }
 
         function setupCardListeners(card, contract) {
@@ -697,7 +702,7 @@
             const unstakeButton = card.querySelector("#unstakeButton");
             const voteButton = card.querySelector("#voteButton");
             const cancelVoteButton = card.querySelector("#cancelVoteButton");
-            const claimRewardsButton = card.querySelector("#claimRewards");
+            const claimRewardsButton = card.querySelector("#claimRewardsButton");
             const stakeToken = card.querySelector("#stakeToken");
             const voteToken = card.querySelector("#voteToken");
             const cancelVoteToken = card.querySelector("#cancelVoteToken");
@@ -712,58 +717,43 @@
             stakeInput.addEventListener("input", () => {
                 const amount = parseFloat(stakeInput.value);
                 const minStake = parseFloat(stakeToken.selectedOptions[0].dataset.minStake);
-                stakeButton.disabled = !account || !amount || amount <= 0 || amount < minStake;
+                stakeButton.disabled = !account || isNaN(amount) || amount <= 0 || amount < minStake;
             });
 
             voteInput.addEventListener("input", () => {
                 const amount = parseFloat(voteInput.value);
-                console.log("Vote input:", { amount, account });
                 const valid = account && amount >= 1 && Number.isInteger(amount);
                 voteButton.disabled = !valid;
-                if (!valid) showStatus("Enter a whole number ≥ 1", true);
+                if (!valid && amount) showStatus("Enter a whole number ≥ 1 for voting", true);
             });
 
             card.querySelectorAll("#stakePercentages button").forEach(button => {
-                button.addEventListener("click", () => {
-                    card.querySelectorAll("#stakeButtons button").forEach(btn => btn.classList.remove("active"));
+                button.addEventListener("click", async () => {
+                    card.querySelectorAll("#stakePercentages button").forEach(btn => btn.classList.remove("active"));
                     button.classList.add("active");
-                    setAmount(button.dataset.percentage, "stake");
+                    await setAmount(button.dataset.percentage, "stake", card);
                 });
             });
 
             card.querySelectorAll("#voteButtons button").forEach(button => {
-                button.addEventListener("click", () => {
+                button.addEventListener("click", async () => {
                     card.querySelectorAll("#voteButtons button").forEach(btn => btn.classList.remove("active"));
                     button.classList.add("active");
-                    setAmount(button.dataset.percentage, "vote");
+                    await setAmount(button.dataset.percentage, "vote", card);
                 });
             });
 
-            stakeButton.addEventListener("click", async () => {
-                await stakeLP(card, contract);
-            });
-
-            unstakeButton.addEventListener("click", async () => {
-                await unstakeLP(card, contract);
-            });
-
-            voteButton.addEventListener("click", async () => {
-                await vote(card, contract);
-            });
-
-            cancelVoteButton.addEventListener("click", async () => {
-                await cancelVote(card, contract);
-            });
-
-            claimRewardsButton.addEventListener("click", async () => {
-                await claimRewards(card, contract);
-            });
+            stakeButton.addEventListener("click", async () => await stakeLP(card, contract));
+            unstakeButton.addEventListener("click", async () => await unstakeLP(card, contract));
+            voteButton.addEventListener("click", async () => await vote(card, contract));
+            cancelVoteButton.addEventListener("click", async () => await cancelVote(card, contract));
+            claimRewardsButton.addEventListener("click", async () => await claimRewards(card, contract));
 
             voteInput.value = "1";
             voteInput.dispatchEvent(new Event("input"));
         }
 
-        async function setAmount(card, percentage, type) {
+        async function setAmount(percentage, type, card) {
             if (!web3 || !account) {
                 showStatus("Please connect wallet.", true);
                 return;
@@ -777,7 +767,7 @@
             } else {
                 balance = parseFloat(web3.utils.fromWei(card.dataset.tokenBalance, "ether"));
             }
-            let amount = percentage === "100" ? Math.max(0, balance - 0.01) : balance * (percentage / 100);
+            let amount = percentage === "100" ? balance : balance * (percentage / 100);
             if (type === "vote") amount = Math.floor(amount);
             if (type === "stake") {
                 const minStake = parseFloat(card.querySelector("#stakeToken").selectedOptions[0].dataset.minStake);
@@ -787,7 +777,6 @@
             const button = card.querySelector(`#${type}Button`);
             const minStake = type === "stake" ? parseFloat(card.querySelector(`#${type}Token`).selectedOptions[0].dataset.minStake) : 0;
             button.disabled = !account || amount <= 0 || (type === "vote" && amount < 1) || (type === "stake" && amount < minStake);
-            console.log(`Set ${type} amount:`, { amount, disabled: button.disabled });
         }
 
         async function stakeLP(card, contract) {
@@ -798,12 +787,12 @@
             const token = card.querySelector("#stakeToken").value;
             const amount = parseFloat(card.querySelector("#stakeAmount").value);
             const minStake = parseFloat(card.querySelector("#stakeToken").selectedOptions[0].dataset.minStake);
-            if (!amount || amount <= 0) {
+            if (isNaN(amount) || amount <= 0) {
                 showStatus("Please enter a valid amount.", true);
                 return;
             }
             if (amount < minStake) {
-                showStatus(`Amount must be at least ${minStake} LP tokens.`, true);
+                showStatus(`Amount must be at least ${minStake.toFixed(2)} LP tokens.`, true);
                 return;
             }
             const portions = Math.floor(amount / minStake);
@@ -887,7 +876,7 @@
             }
             const token = card.querySelector("#voteToken").value;
             const amount = parseFloat(card.querySelector("#voteAmount").value);
-            if (!amount || amount < 1 || !Number.isInteger(amount)) {
+            if (isNaN(amount) || amount < 1 || !Number.isInteger(amount)) {
                 showStatus("Enter a valid vote amount (minimum 1, whole number).", true);
                 return;
             }
