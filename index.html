@@ -540,7 +540,7 @@
                 const nodeData = await Promise.all(nodes.map(async node => {
     const votes = await contract.methods.getNodeVotes(node.address).call();
     const reward = await contract.methods.getRewardPerUnitPerBlock(node.address).call();
-    return { name: node.name, votes, reward: parseFloat(web3.utils.fromWei(reward, "ether")) / 1e17 };
+    return { name: node.name, votes, reward: parseFloat(web3.utils.fromWei(reward, "ether")) / 1e18 };
 }));
                 const tokenBalanceDisplay = account ? parseFloat(web3.utils.fromWei(tokenBalance, "ether")).toFixed(2) : "0";
                 const pendingRewards = account ? parseFloat(web3.utils.fromWei(userStakes.totalReward, "ether")).toFixed(2) : "0";
