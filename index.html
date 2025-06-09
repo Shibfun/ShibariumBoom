@@ -322,6 +322,10 @@
             margin-top: 8px;
             text-align: left;
         }
+        .stake-note.warning {
+            color: #FF4444;
+            font-weight: 600;
+        }
         .footer {
             font-size: 0.8em;
             color: #B0B0B0;
@@ -381,7 +385,7 @@
     <script src="https://cdn.jsdelivr.net/npm/web3@1.7.0/dist/web3.min.js"></script>
     <script>
         let web3, account;
-        const contractAddress = "0x71E64fDcbFE9A92928606D8B9c9433cd0c754716";
+        const contractAddress = "0x61142dF21c283a749FB92d90D52035e0FC096f98";
         const shibarium = {
             chainId: "0x6d",
             chainName: "Shibarium",
@@ -398,16 +402,15 @@
             {"inputs":[{"internalType":"address","name":"lpToken","type":"address"},{"internalType":"uint256","name":"_amount","type":"uint256"}],"name":"vote","outputs":[],"stateMutability":"nonpayable","type":"function"},
             {"inputs":[{"internalType":"address","name":"lpToken","type":"address"}],"name":"cancelVote","outputs":[],"stateMutability":"nonpayable","type":"function"},
             {"inputs":[],"name":"claimRewards","outputs":[],"stateMutability":"nonpayable","type":"function"},
-            {"inputs":[{"internalType":"address","name":"_user","type":"address"}],"name":"getPendingRewards","outputs":[{"internalType":"uint256","name":"totalReward","type":"uint256"}],"stateMutability":"view","type":"function"},
+            {"inputs":[{"internalType":"address","name":"_user","type":"address"}],"name":"getPendingRewards","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
             {"inputs":[{"internalType":"address","name":"lpToken","type":"address"}],"name":"getNodeVotes","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
             {"inputs":[{"internalType":"address","name":"lpToken","type":"address"}],"name":"getRewardPerUnitPerBlock","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
             {"inputs":[{"internalType":"address","name":"_user","type":"address"}],"name":"getUserStake","outputs":[{"internalType":"address[]","name":"tokens","type":"address[]"},{"internalType":"uint256[]","name":"amounts","type":"uint256[]"},{"internalType":"uint256","name":"userStartBlock","type":"uint256"},{"internalType":"uint256","name":"totalReward","type":"uint256"}],"stateMutability":"view","type":"function"},
-            {"inputs":[{"internalType":"address","name":"_user","type":"address"},{"internalType":"address","name":"lpToken","type":"address"}],"name":"getUserVotes","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
-            {"inputs":[{"internalType":"address","name":"_user","type":"address"}],"name":"getUserHistory","outputs":[{"internalType":"uint256[]","name":"","type":"uint256[]"}],"stateMutability":"view","type":"function"},
             {"inputs":[],"name":"getTotalStaked","outputs":[{"internalType":"address[]","name":"tokens","type":"address[]"},{"internalType":"uint256[]","name":"amounts","type":"uint256[]"}],"stateMutability":"view","type":"function"},
             {"inputs":[],"name":"getRemainingRewards","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
             {"inputs":[{"internalType":"address","name":"owner","type":"address"},{"internalType":"address","name":"spender","type":"address"}],"name":"allowance","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
-            {"inputs":[{"internalType":"address","name":"lpToken","type":"address"}],"name":"minStakeMultiple","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"}
+            {"inputs":[{"internalType":"address","name":"lpToken","type":"address"}],"name":"minStakeMultiple","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
+            {"inputs":[{"internalType":"address","name":"","type":"address"},{"internalType":"address","name":"","type":"address"}],"name":"userVotes","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"}
         ];
         const erc20Abi = [
             {"inputs":[{"internalType":"address","name":"account","type":"address"}],"name":"balanceOf","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
@@ -522,6 +525,8 @@
                 let userStakes = { tokens: [], amounts: [], totalReward: "0" };
                 let userVotes = {};
                 let minStakeMultiples = {};
+                const remainingRewards = await contract.methods.getRemainingRewards().call();
+                const remainingRewardsDisplay = parseFloat(web3.utils.fromWei(remainingRewards, "ether")).toFixed(2);
                 if (account) {
                     tokenBalance = await contract.methods.balanceOf(account).call();
                     const stakeData = await contract.methods.getUserStake(account).call();
@@ -531,7 +536,7 @@
                         totalReward: stakeData.totalReward
                     };
                     for (const node of nodes) {
-                        const votes = await contract.methods.getUserVotes(account, node.address).call();
+                        const votes = await contract.methods.userVotes(account, node.address).call();
                         userVotes[node.name] = parseFloat(web3.utils.fromWei(votes, "ether"));
                         const minStake = await contract.methods.minStakeMultiple(node.address).call();
                         minStakeMultiples[node.address] = parseFloat(web3.utils.fromWei(minStake, "ether"));
@@ -570,6 +575,7 @@
                     <div class="card-content">
                         <h4>BOOM Staking & Voting</h4>
                         <p class="description">Stake LP tokens, vote for nodes, and earn rewards on Shibarium. Rewards are calculated based on complete portions of the minimum stake, remainders are ignored.</p>
+                        <p>Remaining Rewards: <span id="remainingRewards">${remainingRewardsDisplay}</span> BOOM</p>
                     </div>
                     <div class="action-section">
                         <div class="action-box">
@@ -704,7 +710,7 @@
             stakeTokenSelect.addEventListener("change", () => updateLPBalance(card, contract));
             cancelVoteTokenSelect.addEventListener("change", async () => {
                 const token = cancelVoteTokenSelect.value;
-                const votes = await contract.methods.getUserVotes(account, token).call();
+                const votes = await contract.methods.userVotes(account, token).call();
                 cancelVoteButton.disabled = !account || parseFloat(web3.utils.fromWei(votes, "ether")) <= 0;
             });
 
@@ -800,7 +806,10 @@
             }
             const portions = Math.floor(amount / minStake);
             if (amount % minStake !== 0) {
-                showStatus(`Warning: Input amount is not a multiple of ${minStake}. Only ${portions * minStake} LP will count toward rewards.`, true);
+                showStatus(`Warning: Only ${portions * minStake} LP will count toward rewards. Remainder ignored.`, true);
+                card.querySelector("#stakeNote").classList.add("warning");
+            } else {
+                card.querySelector("#stakeNote").classList.remove("warning");
             }
             let amountWei;
             try {
@@ -896,6 +905,13 @@
                 showStatus("Insufficient BOOM balance.", true);
                 return;
             }
+            const totalSupply = await contract.methods.totalSupply().call();
+            const nodeVotes = await contract.methods.getNodeVotes(token).call();
+            const maxVoteLimit = web3.utils.toBN(totalSupply).div(web3.utils.toBN(10));
+            if (web3.utils.toBN(nodeVotes).add(web3.utils.toBN(amountWei)).gt(maxVoteLimit)) {
+                showStatus("Vote amount exceeds node vote limit (10% of total supply).", true);
+                return;
+            }
             const isValid = await contract.methods.isValidLPToken(token).call();
             if (!isValid) {
                 showStatus("Invalid LP token.", true);
@@ -926,7 +942,7 @@
                 return;
             }
             const token = card.querySelector("#cancelVoteToken").value;
-            const votes = await contract.methods.getUserVotes(account, token).call();
+            const votes = await contract.methods.userVotes(account, token).call();
             if (web3.utils.toBN(votes).isZero()) {
                 showStatus("No votes to cancel for this node.", true);
                 return;
