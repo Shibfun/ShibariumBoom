@@ -15,7 +15,7 @@
         body {
             font-family: 'Inter', sans-serif;
             background: #121212;
-            color: #E0e0e0;
+            color: #E0E0E0;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
@@ -29,26 +29,26 @@
         .header h1 {
             font-size: clamp(1.8rem, 5vw, 2.5rem);
             font-weight: 700;
-            color: #ff8c00;
+            color: #FF8C00;
             letter-spacing: 1px;
         }
         .connect-section {
-            margin-bottom: 24px;
+            margin-bottom: 16px;
         }
         .connect-section button {
             padding: 10px 24px;
-            background: linear-gradient(45deg, #ff8c00, #ffa500);
-            color: #fff;
+            background: linear-gradient(45deg, #FF8C00, #FFA500);
+            color: #FFF;
             border: none;
             border-radius: 24px;
             font-weight: 600;
             cursor: pointer;
-            font-size: 1em;
+            font-size: 1rem;
             transition: transform 0.2s, background 0.3s;
         }
         .connect-section button:hover {
             transform: scale(1.05);
-            background: linear-gradient(45deg, #ffa500, #ff8c00);
+            background: linear-gradient(45deg, #FFA500, #FF8C00);
         }
         .container {
             width: 100%;
@@ -59,11 +59,11 @@
             justify-content: center;
         }
         .card {
-            background: #1e1e1e;
+            background: #1E1E1E;
             border: 1px solid #333;
             border-radius: 16px;
             overflow: hidden;
-            box-shadow: 0px 4px 12px rgba(0,0,0,0.2);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
             width: 100%;
             max-width: 500px;
             display: flex;
@@ -80,7 +80,7 @@
             font-size: 1.1rem;
             font-weight: 600;
             flex-grow: 1;
-            color: #e0e0e0;
+            color: #E0E0E0;
         }
         .card-header .copy-button {
             background: none;
@@ -96,8 +96,8 @@
         }
         .card-header .copy-button .tooltip {
             visibility: hidden;
-            background: #ff8c00;
-            color: #fff;
+            background: #FF8C00;
+            color: #FFF;
             font-size: 0.8rem;
             padding: 4px 8px;
             border-radius: 4px;
@@ -119,11 +119,11 @@
             font-size: 1.4rem;
             font-weight: 600;
             margin-bottom: 12px;
-            color: #ff8c00;
+            color: #FF8C00;
         }
         .card-content p.description {
             font-size: 0.9rem;
-            color: #b0b0b0;
+            color: #B0B0B0;
             margin-bottom: 16px;
             line-height: 1.5;
         }
@@ -133,126 +133,129 @@
         }
         .action-box {
             background: #252525;
-            padding: 16px;
+            padding: 12px;
             border-radius: 12px;
-            margin-bottom: 16px;
-        }
-        .action-box h5 {
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: #ff8c00;
             margin-bottom: 12px;
         }
-        .balance-row {
-            display: flex;
-            justify-content: space-between;
-            font-size: 0.85rem;
-            margin-bottom: 8px;
-            color: #ff8c00;
-        }
-        .token-display {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 10px;
-            background: #1e1e1e;
-            border-radius: 10px;
+        .action-box h5 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #FF8C00;
             margin-bottom: 8px;
         }
-        .token-display div {
+        .token-card-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            justify-content: center;
+        }
+        .token-card {
+            background: #1E1E1E;
+            border: 1px solid #333;
+            border-radius: 12px;
+            padding: 12px;
+            width: 100%;
+            max-width: 320px;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+        .token-header {
             display: flex;
             align-items: center;
+            margin-bottom: 8px;
         }
-        .token-display img {
+        .token-header img {
             width: 24px;
             height: 24px;
             margin-right: 8px;
         }
-        .token-display input {
-            background: #1e1e1e;
-            color: #e0e0e0;
-            border: none;
-            padding: 5px;
-            border-radius: 5px;
-            font-size: 0.9rem;
-            width: 100px;
-            text-transform: uppercase;
+        .token-header h6 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #E0E0E0;
         }
-        .token-display input:focus {
-            outline: none;
+        .balance-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            margin-bottom: 8px;
+            color: #FF8C00;
         }
-        .action-box input[type="number"] {
+        .action-box input {
             width: 100%;
-            padding: 10px;
-            background: #1e1e1e;
+            padding: 8px;
+            background: #1E1E1E;
             border: 1px solid #333;
             border-radius: 8px;
-            color: #e0e0e0;
-            font-size: 0.9rem;
+            color: #E0E0E0;
+            font-size: 0.85rem;
             text-align: right;
             outline: none;
+            margin-bottom: 8px;
         }
         .percentage-buttons {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 8px;
-            margin: 8px 0;
+            gap: 6px;
+            margin-bottom: 8px;
         }
         .percentage-buttons button {
             padding: 0;
             background: #333;
             border: 1px solid #444;
-            border-radius: 8px;
+            border-radius: 6px;
             cursor: pointer;
-            color: #e0e0e0;
-            font-size: 0.85rem;
+            color: #E0E0E0;
+            font-size: 0.8rem;
             font-weight: 600;
-            height: 36px;
+            height: 32px;
             display: flex;
             align-items: center;
             justify-content: center;
             transition: all 0.2s;
         }
         .percentage-buttons button:hover {
-            background: #ff8c00;
-            color: #fff;
+            background: #FF8C00;
+            color: #FFF;
             transform: scale(1.05);
         }
         .percentage-buttons button.active {
-            background: linear-gradient(45deg, #ff8c00, #ffa500);
-            color: #fff;
-            border-color: #ff8c00;
+            background: linear-gradient(45deg, #FF8C00, #FFA500);
+            color: #FFF;
+            border-color: #FF8C00;
         }
         .action-box .action-button {
-            padding: 10px;
-            background: linear-gradient(45deg, #ff8c00, #ffa500);
-            color: #fff;
+            padding: 8px;
+            background: linear-gradient(45deg, #FF8C00, #FFA500);
+            color: #FFF;
             border: none;
             border-radius: 8px;
             cursor: pointer;
             font-weight: 600;
             width: 100%;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             position: relative;
             transition: background 0.3s;
+            margin-bottom: 8px;
         }
         .action-box .action-button:disabled {
             background: #555;
             cursor: not-allowed;
         }
         .action-box .action-button:hover:not(:disabled) {
-            background: linear-gradient(45deg, #ffa500, #ff8c00);
+            background: linear-gradient(45deg, #FFA500, #FF8C00);
         }
         .action-box .action-button .spinner {
             display: none;
-            border: 2px solid #fff;
+            border: 2px solid #FFF;
             border-top: 2px solid transparent;
             border-radius: 50%;
-            width: 16px;
-            height: 16px;
+            width: 14px;
+            height: 14px;
             animation: spin 1s linear infinite;
             position: absolute;
-            left: 12px;
+            left: 10px;
             top: 50%;
             transform: translateY(-50%);
         }
@@ -260,46 +263,30 @@
             display: block;
         }
         .node-info {
-            margin-top: 16px;
+            margin-top: 12px;
         }
         .node-info table {
             width: 100%;
             border-collapse: collapse;
-            font-size: 0.85rem;
-            color: #e0e0e0;
+            font-size: 0.8rem;
+            color: #E0E0E0;
         }
         .node-info th, .node-info td {
-            padding: 8px;
+            padding: 6px;
             border: 1px solid #333;
             text-align: left;
         }
         .node-info th {
             background: #252525;
-            color: #ff8c00;
+            color: #FF8C00;
         }
         .vote-info {
-            margin-top: 16px;
-            background: #252525;
-            padding: 12px;
-            border-radius: 8px;
-        }
-        .vote-info h5 {
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: #ff8c00;
-            margin-bottom: 8px;
-        }
-        .vote-info ul {
-            list-style: none;
-        }
-        .vote-info li {
-            display: flex;
-            justify-content: space-between;
-            padding: 4px 0;
-            font-size: 0.85rem;
+            margin-top: 8px;
+            font-size: 0.8rem;
+            color: #B0B0B0;
         }
         .global-spinner {
-            border: 4px solid #ff8c00;
+            border: 4px solid #FF8C00;
             border-top: 4px solid transparent;
             border-radius: 50%;
             width: 40px;
@@ -314,34 +301,34 @@
         }
         .status {
             font-size: 0.9rem;
-            color: #ff8c00;
+            color: #FF8C00;
             text-align: center;
             margin: 12px 0;
         }
         .stake-note {
-            font-size: 0.85rem;
-            color: #ffa500;
-            margin-top: 8px;
+            font-size: 0.8rem;
+            color: #FFA500;
+            margin-top: 4px;
             text-align: left;
         }
         .stake-note.warning {
-            color: #ff4444;
+            color: #FF4444;
             font-weight: 600;
         }
         .footer {
             font-size: 0.8rem;
-            color: #b0b0b0;
+            color: #B0B0B0;
             text-align: center;
             margin-top: auto;
             padding: 16px;
         }
         .footer a {
-            color: #ff8c00;
+            color: #FF8C00;
             text-decoration: none;
             transition: color 0.2s;
         }
         .footer a:hover {
-            color: #ffa500;
+            color: #FFA500;
         }
         @media (max-width: 768px) {
             body {
@@ -365,6 +352,19 @@
             .percentage-buttons {
                 grid-template-columns: repeat(2, 1fr);
             }
+            .token-card {
+                max-width: 100%;
+            }
+        }
+        @media (min-width: 769px) and (max-width: 1024px) {
+            .token-card {
+                max-width: calc(50% - 8px);
+            }
+        }
+        @media (min-width: 1025px) {
+            .token-card {
+                max-width: calc(33.33% - 11px);
+            }
         }
     </style>
 </head>
@@ -383,6 +383,7 @@
     <div class="footer">
         Powered by <a href="https://shibarium.shib.io/" target="_blank">Shibarium</a> | ShibClub © 2025
     </div>
+
     <script src="https://cdn.jsdelivr.net/npm/web3@1.7.0/dist/web3.min.js"></script>
     <script>
         let web3, account;
@@ -440,15 +441,18 @@
         ];
         const boomLogo = "https://woofswap.finance/image/tokens/boom.png";
         const maxAllowance = "115792089237316195423570985008687907853269984665640564039457584007913129639935";
+
         function shortenAddress(address) {
             return address ? `${address.slice(0, 6)}...${address.slice(-4)}` : "0x...";
         }
+
         function showStatus(message, isError = false) {
             const status = document.getElementById("searchStatus");
             status.innerText = message;
-            status.style.color = isError ? "#ff4444" : "#ff8c00";
+            status.style.color = isError ? "#FF4444" : "#FF8C00";
             setTimeout(() => { status.innerText = ""; }, 5000);
         }
+
         async function tryInitializeWeb3() {
             for (const rpc of shibarium.rpcUrls) {
                 try {
@@ -461,6 +465,7 @@
             }
             return false;
         }
+
         async function connectWallet() {
             try {
                 if (!window.ethereum) {
@@ -498,12 +503,14 @@
                 document.getElementById("globalSpinner").style.display = "none";
             }
         }
+
         function resetUI() {
             document.getElementById("connectWalletButton").innerText = "Connect Wallet";
             document.getElementById("searchStatus").innerText = "";
-            const actionButton = document.querySelector(".action-button");
-            if (actionButton) actionButton.disabled = true;
+            const actionButtons = document.querySelectorAll(".action-button");
+            actionButtons.forEach(btn => btn.disabled = true);
         }
+
         async function loadActionCard() {
             const status = document.getElementById("searchStatus");
             const card = document.getElementById("actionCard");
@@ -520,6 +527,7 @@
                 let userStakes = { tokens: [], amounts: [], totalReward: "0" };
                 let userVotes = {};
                 let minStakeMultiples = {};
+                let lpBalances = {};
                 if (account) {
                     tokenBalance = await contract.methods.balanceOf(account).call();
                     const stakeData = await contract.methods.getUserStake(account).call();
@@ -533,6 +541,9 @@
                         userVotes[node.address] = web3.utils.fromWei(votes, "ether");
                         const minStake = await contract.methods.minStakeMultiple(node.address).call();
                         minStakeMultiples[node.address] = web3.utils.fromWei(minStake, "ether");
+                        const tokenContract = new web3.eth.Contract(erc20Abi, node.address);
+                        const balance = await tokenContract.methods.balanceOf(account).call();
+                        lpBalances[node.address] = web3.utils.fromWei(balance, "ether");
                     }
                 }
                 const nodeData = await Promise.all(nodes.map(async node => {
@@ -547,8 +558,66 @@
                 const tokenBalanceDisplay = parseFloat(web3.utils.fromWei(tokenBalance, "ether")).toFixed(2);
                 const pendingRewards = parseFloat(web3.utils.fromWei(userStakes.totalReward, "ether")).toFixed(2);
                 card.dataset.tokenBalance = tokenBalance;
-                card.dataset.minStakeMultiples = JSON.stringify(minStakeMultiples);
-                card.dataset.userStakes = JSON.stringify(userStakes);
+                let tokenCards = nodes.map(node => {
+                    const lpBalance = parseFloat(lpBalances[node.address] || "0").toFixed(2);
+                    const minStake = parseFloat(minStakeMultiples[node.address]).toFixed(2);
+                    const userVote = parseFloat(userVotes[node.address]).toFixed(2);
+                    const stakedAmount = userStakes.tokens.find(t => t.toLowerCase() === node.address.toLowerCase())
+                        ? parseFloat(web3.utils.fromWei(userStakes.amounts[userStakes.tokens.indexOf(userStakes.tokens.find(t => t.toLowerCase() === node.address.toLowerCase()))], "ether")).toFixed(2)
+                        : "0.00";
+                    return `
+                        <div class="token-card" data-token-address="${node.address}" data-min-stake="${minStake}">
+                            <div class="token-header">
+                                <img src="${node.logo}" alt="${node.name}">
+                                <h6>${node.name}</h6>
+                            </div>
+                            <div class="action-box">
+                                <h5>Stake</h5>
+                                <div class="balance-row">
+                                    <span>LP Balance</span>
+                                    <span>${lpBalance} LP</span>
+                                </div>
+                                <input type="number" class="stake-amount" placeholder="0.00" step="0.01" min="0">
+                                <p class="stake-note">Note: Rewards per ${minStake} LP portion.</p>
+                                <div class="percentage-buttons stake-percentages">
+                                    <button data-percentage="25">25%</button>
+                                    <button data-percentage="50">50%</button>
+                                    <button data-percentage="75">75%</button>
+                                    <button data-percentage="100">MAX</button>
+                                </div>
+                                <button class="action-button stake-button" disabled>Stake</button>
+                            </div>
+                            <div class="action-box">
+                                <h5>Unstake</h5>
+                                <div class="balance-row">
+                                    <span>Staked</span>
+                                    <span>${stakedAmount} LP</span>
+                                </div>
+                                <button class="action-button unstake-button" ${stakedAmount > 0 ? '' : 'disabled'}>Unstake</button>
+                            </div>
+                            <div class="action-box">
+                                <h5>Vote</h5>
+                                <div class="balance-row">
+                                    <span>BOOM Balance</span>
+                                    <span>${tokenBalanceDisplay} BOOM</span>
+                                </div>
+                                <input type="number" class="vote-amount" placeholder="1" step="1" min="1" value="1">
+                                <div class="percentage-buttons vote-percentages">
+                                    <button data-percentage="25">25%</button>
+                                    <button data-percentage="50">50%</button>
+                                    <button data-percentage="75">75%</button>
+                                    <button data-percentage="100">MAX</button>
+                                </div>
+                                <button class="action-button vote-button" disabled>Vote</button>
+                            </div>
+                            <div class="action-box">
+                                <h5>Cancel Vote</h5>
+                                <div class="vote-info">Votes: ${userVote} BOOM</div>
+                                <button class="action-button cancel-vote-button" ${userVote > 0 ? '' : 'disabled'}>Cancel Vote</button>
+                            </div>
+                        </div>
+                    `;
+                }).join("");
                 let nodeTable = nodeData.map(node => `
                     <tr>
                         <td>${node.name}</td>
@@ -556,89 +625,23 @@
                         <td>${parseFloat(node.reward).toFixed(3)}</td>
                     </tr>
                 `).join("");
-                let voteList = nodes.filter(node => parseFloat(userVotes[node.address]) > 0).map(node => `<li>${node.name}: ${parseFloat(userVotes[node.address]).toFixed(2)} BOOM</li>`).join("") || "<li>No votes</li>";
                 card.innerHTML = `
                     <div class="card-header">
                         <h3>BOOM Contract</h3>
-                        <button class="copy-button" data-name="${contractAddress}">
+                        <button class="copy-button" data-address="${contractAddress}">
                             <img src="https://img.icons8.com/ios-filled/16/000000/contract.png" alt="Copy Contract">
-                            <span class="tooltip">Copied</span>
+                            <span class="tooltip">Copied Contract</span>
                         </button>
                     </div>
                     <div class="card-content">
                         <h4>BOOM Staking & Voting</h4>
-                        <p class="description">Stake LP tokens, vote for nodes, and earn BOOM rewards on Shibarium. Rewards are calculated based on complete portions of minimum stake.</p>
+                        <p class="description">Stake LP tokens, vote for nodes, and earn BOOM rewards on Shibarium. Rewards are calculated based on complete portions of the minimum stake.</p>
                     </div>
-                    <div>
                     <div class="action-section">
-                        <div class="action-box">
-                            <h5>Stake / Unstake</h5>
-                            <div class="balance-row">
-                                <span>LP Token</span>
-                                <span id="lpBalance">Balance: 0.00</span>
-                            </div>
-                            <div class="token-display">
-                                <div>
-                                    <img src="${nodes[0].logo}" alt="Token" id="lpLogo">
-                                    <span id="tokenSymbol">${nodes[0].name}</span>
-                                </div>
-                                <input type="stakeTokenInput" id="stakeToken" placeholder="Enter token symbol" value="${nodes[0].name}" data-token-address="${nodes[0].address}" data-min-stake="${minStakeMultiples[nodes[0].address]}">
-                            </div>
-                            <input type="number" id="stakeAmount" placeholder="0.00" step="0.0" min="0">
-                            <p class="stake-note" id="stakeNote">Note: Rewards calculated per ${parseFloat(minStakeMultiples[nodes[0].address]).toFixed(2)} LP portion.</p>
-                            <div class="percentage-buttons" id="stakePercentages">
-                                <button data-percentage="25">25%</button>
-                                <button data-percentage="50">50%</button>
-                                <button data-percentage="75">75%</button>
-                                <button data-percentage="100">MAX</button>
-                            </div>
-                            <button class="action-button" id="stakeButton" disabled>Stake</button>
-                            <div class="token-display" style="margin-top: 10px;">
-                                <div>
-                                    <span id="unstakeSymbol">${userStakes.tokens.length > 0 ? nodes.find(n => n.address.toLowerCase() === userStakes.tokens[0].toLowerCase()).name : "No stakes"}</span>
-                                </div>
-                                <input type="text" id="unstakeTokenInput" placeholder="Enter staked token" ${userStakes.tokens.length > 0 ? `value="${nodes.find(n => n.address.toLowerCase() === userStakes.tokens[0].toLowerCase()).name}" data-token-address="${userStakes.tokens[0]}"` : ""}>
-                            </div>
-                            <button class="action-button" id="unstakeButton" ${userStakes.tokens.length > 0 ? "" : "disabled"}>Unstake</button>
-                        </div>
-                        <div class="action-box">
-                            <h5>Vote / Cancel</h5>
-                            <div class="balance-row">
-                                <span>BOOM</span>
-                                <span>Balance: ${tokenBalanceDisplay} BOOM</span>
-                            </div>
-                            <div class="token-display">
-                                <div>
-                                    <img src="${boomLogo}" alt="BOOM">
-                                    <span id="voteTokenSymbol">${nodes[0].name}</span>
-                                </div>
-                                <input type="text" id="voteToken" placeholder="Enter token symbol" value="${nodes[0].name}" data-token-address="${nodes[0].address}">
-                            </div>
-                            <input type="number" id="voteAmount" placeholder="1" step="1" min="1" value="1">
-                            <div class="percentage-buttons" id="voteButtons">
-                                <button data-percentage="25">25%</button>
-                                <button data-percentage="50">50%</button>
-                                <button data-percentage="75">75%</button>
-                                <button data-percentage="100">MAX</button>
-                            </div>
-                            <button class="action-button" id="voteButton" disabled>Vote</button>
-                            <div class="token-display" style="margin-top: 10px;">
-                                <div>
-                                    <span id="cancelVoteSymbol">${nodes[0].name}</span>
-                                </div>
-                                <input type="text" id="cancelVoteToken" placeholder="Enter token symbol" value="${nodes[0].name}" data-token-address="${nodes[0].address}">
-                            </div>
-                            <button class="action-button" id="cancelVoteButton" disabled>Cancel Vote</button>
-                            <div class="vote-info">
-                                <h5>Your Votes</h5>
-                                <ul id="voteList">
-                                    ${voteList}
-                                </ul>
-                            </div>
-                        </div>
+                        <div class="token-card-grid">${tokenCards}</div>
                         <div class="action-box">
                             <h5>Rewards</h5>
-                            <button class="action-button" id="claimRewardsButton" ${pendingRewards > 0 ? "" : "disabled"}>Claim Rewards (${pendingRewards} BOOM)</button>
+                            <button class="action-button" id="claimRewardsButton" ${pendingRewards > 0 ? '' : 'disabled'}>Claim Rewards (${pendingRewards} BOOM)</button>
                         </div>
                         <div class="node-info">
                             <h4>Node Information</h4>
@@ -654,7 +657,6 @@
                     </div>
                 `;
                 setupCardListeners(card, contract);
-                await updateLPBalance(card, contract);
                 showStatus();
             } catch (e) {
                 showStatus(`Failed to load data: ${e.message}`, true);
@@ -662,91 +664,23 @@
                 spinner.style.display = "none";
             }
         }
-        async function updateLPBalance(card, contract) {
+
+        async function updateTokenCard(card, tokenAddress, contract) {
             if (!account) return;
-            const tokenInput = card.querySelector("#stakeTokenInput");
-            const tokenAddress = tokenInput.dataset.tokenAddress;
-            if (!tokenAddress) {
-                card.querySelector("#lpBalance").innerText = "Balance: 0.00";
-                card.querySelector("#stakeButton").disabled = true;
-                return;
-            }
+            const tokenCard = card.querySelector(`.token-card[data-token-address="${tokenAddress}"]`);
             const tokenContract = new web3.eth.Contract(erc20Abi, tokenAddress);
-            const balance = await tokenContract.methods.balanceOf(account).call();
-            const node = nodes.find(n => n.address.toLowerCase() === tokenAddress.toLowerCase());
-            const minStake = JSON.parse(card.dataset.minStakeMultiples)[tokenAddress];
-            card.querySelector("#lpBalance").innerText = `Balance: ${parseFloat(web3.utils.fromWei(balance, "ether")).toFixed(2)} LP`;
-            card.querySelector("#tokenSymbol").innerText = node ? node.name : "Invalid";
-            card.querySelector("#lpLogo").src = node ? node.logo : "";
-            card.querySelector("#stakeNote").innerText = node ? `Note: Rewards calculated per ${parseFloat(minStake).toFixed(2)} LP portion.` : "Invalid token";
+            const lpBalance = await tokenContract.methods.balanceOf(account).call();
+            const userVotes = await contract.methods.userVotes(account, tokenAddress).call();
+            const stakeData = await contract.methods.getUserStake(account).call();
+            const stakedIndex = stakeData.tokens.findIndex(t => t.toLowerCase() === tokenAddress.toLowerCase());
+            const stakedAmount = stakedIndex >= 0 ? web3.utils.fromWei(stakeData.amounts[stakedIndex], "ether") : "0";
+            tokenCard.querySelector(".balance-row span:last-child").innerText = `${parseFloat(web3.utils.fromWei(lpBalance, "ether")).toFixed(2)} LP`;
+            tokenCard.querySelector(".unstake-button").disabled = parseFloat(stakedAmount) <= 0;
+            tokenCard.querySelector(".unstake-button").parentElement.querySelector(".balance-row span:last-child").innerText = `${parseFloat(stakedAmount).toFixed(2)} LP`;
+            tokenCard.querySelector(".cancel-vote-button").disabled = parseFloat(web3.utils.fromWei(userVotes, "ether")) <= 0;
+            tokenCard.querySelector(".vote-info").innerText = `Votes: ${parseFloat(web3.utils.fromWei(userVotes, "ether")).toFixed(2)} BOOM`;
         }
-        function updateStakeTokenInput(card, input) {
-            const symbol = input.value.trim().toLowerCase();
-            const node = nodes.find(n => n.name.toLowerCase() === symbol);
-            const stakeButton = card.querySelector("#stakeButton");
-            if (node) {
-                input.dataset.tokenAddress = node.address;
-                input.dataset.minStake = JSON.parse(card.dataset.minStakeMultiples)[node.address];
-                card.querySelector("#tokenSymbol").innerText = node.name;
-                card.querySelector("#lpLogo").src = node.logo;
-                card.querySelector("#stakeNote").innerText = `Note: Rewards calculated per ${parseFloat(input.dataset.minStake).toFixed(2)} LP portion.`;
-                updateLPBalance(card, new web3.eth.Contract(contractAbi, contractAddress));
-                stakeButton.disabled = false;
-            } else {
-                input.dataset.tokenAddress = "";
-                input.dataset.minStake = "";
-                card.querySelector("#tokenSymbol").innerText = "Invalid";
-                card.querySelector("#lpLogo").src = "";
-                card.querySelector("#lpBalance").innerText = "Balance: 0.00";
-                card.querySelector("#stakeNote").innerText = "Invalid token symbol";
-                stakeButton.disabled = true;
-            }
-        }
-        function updateUnstakeTokenInput(card, input) {
-            const symbol = input.value.trim().toLowerCase();
-            const userStakes = JSON.parse(card.dataset.userStakes);
-            const node = nodes.find(n => n.name.toLowerCase() === symbol && userStakes.tokens.some(t => t.toLowerCase() === n.address.toLowerCase()));
-            const unstakeButton = card.querySelector("#unstakeButton");
-            if (node) {
-                input.dataset.tokenAddress = node.address;
-                card.querySelector("#unstakeSymbol").innerText = node.name;
-                unstakeButton.disabled = false;
-            } else {
-                input.dataset.tokenAddress = "";
-                card.querySelector("#unstakeSymbol").innerText = "Invalid or no stake";
-                unstakeButton.disabled = true;
-            }
-        }
-        function updateVoteTokenInput(card, input) {
-            const symbol = input.value.trim().toLowerCase();
-            const node = nodes.find(n => n.name.toLowerCase() === symbol);
-            const voteButton = card.querySelector("#voteButton");
-            if (node) {
-                input.dataset.tokenAddress = node.address;
-                card.querySelector("#voteTokenSymbol").innerText = node.name;
-                voteButton.disabled = false;
-            } else {
-                input.dataset.tokenAddress = "";
-                card.querySelector("#voteTokenSymbol").innerText = "Invalid";
-                voteButton.disabled = true;
-            }
-        }
-        async function updateCancelVoteTokenInput(card, input) {
-            const symbol = input.value.trim().toLowerCase();
-            const node = nodes.find(n => n.name.toLowerCase() === symbol);
-            const cancelVoteButton = card.querySelector("#cancelVoteButton");
-            if (node) {
-                input.dataset.tokenAddress = node.address;
-                card.querySelector("#cancelVoteSymbol").innerText = node.name;
-                const contract = new web3.eth.Contract(contractAbi, contractAddress);
-                const votes = await contract.methods.userVotes(account, node.address).call();
-                cancelVoteButton.disabled = !account || parseFloat(web3.utils.fromWei(votes, "ether")) <= 0;
-            } else {
-                input.dataset.tokenAddress = "";
-                card.querySelector("#cancelVoteSymbol").innerText = "Invalid";
-                cancelVoteButton.disabled = true;
-            }
-        }
+
         function setupCardListeners(card, contract) {
             card.querySelectorAll(".copy-button").forEach(button => {
                 button.addEventListener("click", () => {
@@ -756,67 +690,66 @@
                     }).catch(() => showStatus("Failed to copy address.", true));
                 });
             });
-            const stakeInput = card.querySelector("#stakeAmount");
-            const voteInput = card.querySelector("#voteAmount");
-            const stakeButton = card.querySelector("#stakeButton");
-            const unstakeButton = card.querySelector("#unstakeButton");
-            const voteButton = card.querySelector("#voteButton");
-            const cancelVoteButton = card.querySelector("#cancelVoteButton");
-            const claimRewardsButton = card.querySelector("#claimRewardsButton");
-            const stakeTokenInput = card.querySelector("#stakeTokenInput");
-            const voteTokenInput = card.querySelector("#voteToken");
-            const cancelVoteTokenInput = card.querySelector("#cancelVoteToken");
-            const unstakeTokenInput = card.querySelector("#unstakeTokenInput");
-            stakeTokenInput.addEventListener("input", () => updateStakeTokenInput(card, stakeTokenInput));
-            voteTokenInput.addEventListener("input", () => updateVoteTokenInput(card, voteTokenInput));
-            cancelVoteTokenInput.addEventListener("input", () => updateCancelVoteTokenInput(card, cancelVoteTokenInput));
-            unstakeTokenInput.addEventListener("input", () => updateUnstakeTokenInput(card, unstakeTokenInput));
-            stakeInput.addEventListener("input", () => {
-                const amount = parseFloat(stakeInput.value);
-                const minStake = parseFloat(stakeTokenInput.dataset.minStake || 0);
-                stakeButton.disabled = !account || !stakeTokenInput.dataset.tokenAddress || isNaN(amount) || amount <= 0 || amount < minStake;
-            });
-            voteInput.addEventListener("input", () => {
-                const amount = parseFloat(voteInput.value);
-                const valid = account && voteTokenInput.dataset.tokenAddress && amount >= 1 && Number.isInteger(amount);
-                voteButton.disabled = !valid;
-                if (!valid && amount) showStatus("Enter a whole number ≥ 1 for voting", true);
-            });
-            card.querySelectorAll("#stakePercentages button").forEach(button => {
-                button.addEventListener("click", async () => {
-                    card.querySelectorAll("#stakePercentages button").forEach(btn => btn.classList.remove("active"));
-                    button.classList.add("active");
-                    await setPercentage(button.dataset.percentage, "stake", card);
+
+            card.querySelectorAll(".token-card").forEach(tokenCard => {
+                const tokenAddress = tokenCard.dataset.tokenAddress;
+                const minStake = parseFloat(tokenCard.dataset.minStake);
+                const stakeInput = tokenCard.querySelector(".stake-amount");
+                const voteInput = tokenCard.querySelector(".vote-amount");
+                const stakeButton = tokenCard.querySelector(".stake-button");
+                const unstakeButton = tokenCard.querySelector(".unstake-button");
+                const voteButton = tokenCard.querySelector(".vote-button");
+                const cancelVoteButton = tokenCard.querySelector(".cancel-vote-button");
+
+                stakeInput.addEventListener("input", () => {
+                    const amount = parseFloat(stakeInput.value);
+                    stakeButton.disabled = !account || isNaN(amount) || amount <= 0 || amount < minStake;
                 });
-            });
-            card.querySelectorAll("#voteButtons button").forEach(button => {
-                button.addEventListener("click", async () => {
-                    card.querySelectorAll("#voteButtons button").forEach(btn => btn.classList.remove("active"));
-                    button.classList.add("active");
-                    await setPercentage(button.dataset.percentage, "vote", card);
+
+                voteInput.addEventListener("input", () => {
+                    const amount = parseFloat(voteInput.value);
+                    const valid = account && amount >= 1 && Number.isInteger(amount);
+                    voteButton.disabled = !valid;
+                    if (!valid && amount) showStatus("Enter a whole number ≥ 1 for voting", true);
                 });
+
+                tokenCard.querySelectorAll(".stake-percentages button").forEach(button => {
+                    button.addEventListener("click", async () => {
+                        tokenCard.querySelectorAll(".stake-percentages button").forEach(btn => btn.classList.remove("active"));
+                        button.classList.add("active");
+                        await setAmount(button.dataset.percentage, "stake", tokenCard, card);
+                    });
+                });
+
+                tokenCard.querySelectorAll(".vote-percentages button").forEach(button => {
+                    button.addEventListener("click", async () => {
+                        tokenCard.querySelectorAll(".vote-percentages button").forEach(btn => btn.classList.remove("active"));
+                        button.classList.add("active");
+                        await setAmount(button.dataset.percentage, "vote", tokenCard, card);
+                    });
+                });
+
+                stakeButton.addEventListener("click", async () => await stakeLP(tokenCard, contract));
+                unstakeButton.addEventListener("click", async () => await unstakeLP(tokenCard, contract));
+                voteButton.addEventListener("click", async () => await vote(tokenCard, contract));
+                cancelVoteButton.addEventListener("click", async () => await cancelVote(tokenCard, contract));
+
+                voteInput.value = "1";
+                voteInput.dispatchEvent(new Event("input"));
             });
-            stakeButton.addEventListener("click", async () => await stakeLP(card, contract));
-            unstakeButton.addEventListener("click", async () => await unstakeLP(card, contract));
-            voteButton.addEventListener("click", async () => await vote(card, contract));
-            cancelVoteButton.addEventListener("click", async () => await cancelVote(card, contract));
-            claimRewardsButton.addEventListener("click", async () => await claimRewards(card, contract));
-            voteInput.value = "1";
-            voteInput.dispatchEvent(new Event("input"));
+
+            card.querySelector("#claimRewardsButton").addEventListener("click", async () => await claimRewards(card, contract));
         }
-        async function setPercentage(percentage, type, card) {
+
+        async function setAmount(percentage, type, tokenCard, card) {
             if (!web3 || !account) {
                 showStatus("Please connect wallet.", true);
                 return;
             }
-            const input = card.querySelector(`#${type}Amount`);
+            const tokenAddress = tokenCard.dataset.tokenAddress;
+            const input = tokenCard.querySelector(`.${type}-amount`);
             let balance;
             if (type === "stake") {
-                const tokenAddress = card.querySelector("#stakeTokenInput").dataset.tokenAddress;
-                if (!tokenAddress) {
-                    showStatus("Invalid token symbol", true);
-                    return;
-                }
                 const tokenContract = new web3.eth.Contract(erc20Abi, tokenAddress);
                 balance = parseFloat(web3.utils.fromWei(await tokenContract.methods.balanceOf(account).call(), "ether"));
             } else {
@@ -825,27 +758,23 @@
             let amount = percentage === "100" ? balance : balance * (percentage / 100);
             if (type === "vote") amount = Math.floor(amount);
             if (type === "stake") {
-                const minStake = parseFloat(card.querySelector("#stakeTokenInput").dataset.minStake || 0);
+                const minStake = parseFloat(tokenCard.dataset.minStake);
                 amount = Math.floor(amount / minStake) * minStake;
             }
             input.value = amount.toFixed(type === "vote" ? 0 : 2);
-            const button = card.querySelector(`#${type}Button`);
-            const minStake = type === "stake" ? parseFloat(card.querySelector("#stakeTokenInput").dataset.minStake || 0) : 0;
-            button.disabled = !account || !card.querySelector(`#${type}Token${type === "stake" ? "Input" : ""}`).dataset.tokenAddress || amount <= 0 || (type === "vote" && amount < 1) || (type === "stake" && amount < minStake);
+            const button = tokenCard.querySelector(`.${type}-button`);
+            const minStake = type === "stake" ? parseFloat(tokenCard.dataset.minStake) : 0;
+            button.disabled = !account || amount <= 0 || (type === "vote" && amount < 1) || (type === "stake" && amount < minStake);
         }
-        async function stakeLP(card, contract) {
+
+        async function stakeLP(tokenCard, contract) {
             if (!web3 || !account) {
                 showStatus("Please connect wallet.", true);
                 return;
             }
-            const tokenInput = card.querySelector("#stakeTokenInput");
-            const token = tokenInput.dataset.tokenAddress;
-            const amount = parseFloat(card.querySelector("#stakeAmount").value);
-            const minStake = parseFloat(tokenInput.dataset.minStake);
-            if (!token) {
-                showStatus("Invalid token symbol.", true);
-                return;
-            }
+            const tokenAddress = tokenCard.dataset.tokenAddress;
+            const amount = parseFloat(tokenCard.querySelector(".stake-amount").value);
+            const minStake = parseFloat(tokenCard.dataset.minStake);
             if (isNaN(amount) || amount <= 0) {
                 showStatus("Please enter a valid amount.", true);
                 return;
@@ -857,9 +786,9 @@
             const portions = Math.floor(amount / minStake);
             if (amount % minStake !== 0) {
                 showStatus(`Warning: Only ${portions * minStake} LP will count toward rewards.`, true);
-                card.querySelector("#stakeNote").classList.add("warning");
+                tokenCard.querySelector(".stake-note").classList.add("warning");
             } else {
-                card.querySelector("#stakeNote").classList.remove("warning");
+                tokenCard.querySelector(".stake-note").classList.remove("warning");
             }
             let amountWei;
             try {
@@ -868,19 +797,19 @@
                 showStatus("Invalid amount entered.", true);
                 return;
             }
-            const tokenContract = new web3.eth.Contract(erc20Abi, token);
+            const tokenContract = new web3.eth.Contract(erc20Abi, tokenAddress);
             const balance = await tokenContract.methods.balanceOf(account).call();
             if (web3.utils.toBN(balance).lt(web3.utils.toBN(amountWei))) {
                 showStatus("Insufficient LP token balance.", true);
                 return;
             }
-            const isValid = await contract.methods.isValidLPToken(token).call();
+            const isValid = await contract.methods.isValidLPToken(tokenAddress).call();
             if (!isValid) {
                 showStatus("Invalid LP token.", true);
                 return;
             }
             const allowance = await tokenContract.methods.allowance(account, contractAddress).call();
-            const button = card.querySelector("#stakeButton");
+            const button = tokenCard.querySelector(".stake-button");
             try {
                 button.classList.add("loading");
                 button.disabled = true;
@@ -889,7 +818,7 @@
                     await tokenContract.methods.approve(contractAddress, maxAllowance).send({ from: account });
                 }
                 showStatus("Processing stake...");
-                await contract.methods.stakeLP(token, amountWei).send({ from: account });
+                await contract.methods.stakeLP(tokenAddress, amountWei).send({ from: account });
                 showStatus("Stake successful!");
                 await loadActionCard();
             } catch (e) {
@@ -900,23 +829,19 @@
                 button.disabled = false;
             }
         }
-        async function unstakeLP(card, contract) {
+
+        async function unstakeLP(tokenCard, contract) {
             if (!web3 || !account) {
                 showStatus("Please connect wallet.", true);
                 return;
             }
-            const tokenInput = card.querySelector("#unstakeTokenInput");
-            const token = tokenInput.dataset.tokenAddress;
-            if (!token) {
-                showStatus("No valid staked token selected.", true);
-                return;
-            }
-            const button = card.querySelector("#unstakeButton");
+            const tokenAddress = tokenCard.dataset.tokenAddress;
+            const button = tokenCard.querySelector(".unstake-button");
             try {
                 button.classList.add("loading");
                 button.disabled = true;
                 showStatus("Processing unstake...");
-                await contract.methods.unstakeLP(token).send({ from: account });
+                await contract.methods.unstakeLP(tokenAddress).send({ from: account });
                 showStatus("Unstake successful!");
                 await loadActionCard();
             } catch (e) {
@@ -927,18 +852,14 @@
                 button.disabled = false;
             }
         }
-        async function vote(card, contract) {
+
+        async function vote(tokenCard, contract) {
             if (!web3 || !account) {
                 showStatus("Please connect wallet.", true);
                 return;
             }
-            const tokenInput = card.querySelector("#voteToken");
-            const token = tokenInput.dataset.tokenAddress;
-            const amount = parseFloat(card.querySelector("#voteAmount").value);
-            if (!token) {
-                showStatus("Invalid token symbol.", true);
-                return;
-            }
+            const tokenAddress = tokenCard.dataset.tokenAddress;
+            const amount = parseFloat(tokenCard.querySelector(".vote-amount").value);
             if (isNaN(amount) || amount < 1 || !Number.isInteger(amount)) {
                 showStatus("Enter a valid vote amount (minimum 1, whole number).", true);
                 return;
@@ -955,17 +876,17 @@
                 showStatus("Insufficient BOOM balance.", true);
                 return;
             }
-            const isValid = await contract.methods.isValidLPToken(token).call();
+            const isValid = await contract.methods.isValidLPToken(tokenAddress).call();
             if (!isValid) {
                 showStatus("Invalid LP token.", true);
                 return;
             }
-            const button = card.querySelector("#voteButton");
+            const button = tokenCard.querySelector(".vote-button");
             try {
                 button.classList.add("loading");
                 button.disabled = true;
                 showStatus("Processing vote...");
-                await contract.methods.vote(token, amountWei).send({ from: account });
+                await contract.methods.vote(tokenAddress, amountWei).send({ from: account });
                 showStatus("Vote successful!");
                 await loadActionCard();
             } catch (e) {
@@ -976,28 +897,24 @@
                 button.disabled = false;
             }
         }
-        async function cancelVote(card, contract) {
+
+        async function cancelVote(tokenCard, contract) {
             if (!web3 || !account) {
                 showStatus("Please connect wallet.", true);
                 return;
             }
-            const tokenInput = card.querySelector("#cancelVoteToken");
-            const token = tokenInput.dataset.tokenAddress;
-            if (!token) {
-                showStatus("Invalid token symbol.", true);
-                return;
-            }
-            const votes = await contract.methods.userVotes(account, token).call();
+            const tokenAddress = tokenCard.dataset.tokenAddress;
+            const votes = await contract.methods.userVotes(account, tokenAddress).call();
             if (web3.utils.toBN(votes).isZero()) {
                 showStatus("No votes to cancel for this node.", true);
                 return;
             }
-            const button = card.querySelector("#cancelVoteButton");
+            const button = tokenCard.querySelector(".cancel-vote-button");
             try {
                 button.classList.add("loading");
                 button.disabled = true;
                 showStatus("Processing vote cancellation...");
-                await contract.methods.cancelVote(token).send({ from: account });
+                await contract.methods.cancelVote(tokenAddress).send({ from: account });
                 showStatus("Vote cancellation successful!");
                 await loadActionCard();
             } catch (e) {
@@ -1008,6 +925,7 @@
                 button.disabled = false;
             }
         }
+
         async function claimRewards(card, contract) {
             if (!web3 || !account) {
                 showStatus("Please connect wallet.", true);
@@ -1034,10 +952,11 @@
                 button.disabled = false;
             }
         }
+
         document.getElementById("connectWalletButton").addEventListener("click", connectWallet);
         window.addEventListener("load", async () => {
             if (!window.location.protocol.includes("http")) {
-                showStatus("Please run via server (e.g., \"npx serve\").", true);
+                showStatus('Please run via server (e.g., "npx serve").', true);
                 return;
             }
             if (await tryInitializeWeb3()) {
@@ -1046,6 +965,7 @@
                 showStatus("Failed to connect to Shibarium.", true);
             }
         });
+
         window.ethereum?.on("accountsChanged", async accounts => {
             if (!accounts.length) {
                 resetUI();
@@ -1056,6 +976,7 @@
                 await loadActionCard();
             }
         });
+
         window.ethereum?.on("chainChanged", connectWallet);
     </script>
 </body>
