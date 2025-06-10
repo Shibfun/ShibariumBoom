@@ -48,7 +48,7 @@
         }
         .connect-section button:hover {
             transform: scale(1.05);
-            background: linear-gradient(45deg, #FFA500, #FF8C00);
+            background: linear-gradient(45deg, #FFA防水, #FF8C00);
         }
         .container {
             width: 100%;
@@ -185,7 +185,7 @@
             padding: 10px;
             background: #1E1E1E;
             border: 1px solid #333;
-            border,XAI Response: border-radius: 8px;
+            border-radius: 8px;
             color: #E0E0E0;
             font-size: 0.9rem;
             text-align: right;
@@ -386,7 +386,7 @@
     <script src="https://cdn.jsdelivr.net/npm/web3@1.7.0/dist/web3.min.js"></script>
     <script>
         let web3, account;
-        const contractAddress = "0x6Bab1Cf1AD7504A47b85101C06faCAe956ab7aCB";
+        const contractAddress = "0x892a64aEBD99b5Cca4802ea688966eaf96452cdA";
         const shibarium = {
             chainId: "0x6d",
             chainName: "Shibarium",
@@ -411,7 +411,8 @@
             {"inputs":[{"internalType":"address","name":"owner","type":"address"},{"internalType":"address","name":"spender","type":"address"}],"name":"allowance","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
             {"inputs":[{"internalType":"address","name":"lpToken","type":"address"}],"name":"minStakeMultiple","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
             {"inputs":[{"internalType":"address","name":"","type":"address"},{"internalType":"address","name":"","type":"address"}],"name":"userVotes","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
-            {"inputs":[],"name":"totalSupply","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"}
+            {"inputs":[],"name":"totalSupply","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
+            {"inputs":[],"name":"getRemainingRewards","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"}
         ];
         const erc20Abi = [
             {"inputs":[{"internalType":"address","name":"account","type":"address"}],"name":"balanceOf","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
@@ -890,13 +891,6 @@
             const balance = await contract.methods.balanceOf(account).call();
             if (web3.utils.toBN(balance).lt(web3.utils.toBN(amountWei))) {
                 showStatus("Insufficient BOOM balance.", true);
-                return;
-            }
-            const totalSupply = await contract.methods.totalSupply().call();
-            const nodeVotes = await contract.methods.getNodeVotes(token).call();
-            const maxVoteLimit = web3.utils.toBN(totalSupply).div(web3.utils.toBN(10));
-            if (web3.utils.toBN(nodeVotes).add(web3.utils.toBN(amountWei)).gt(maxVoteLimit)) {
-                showStatus("Vote exceeds node vote limit (10% of total supply).", true);
                 return;
             }
             const isValid = await contract.methods.isValidLPToken(token).call();
