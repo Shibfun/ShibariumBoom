@@ -48,7 +48,7 @@
         }
         .connect-section button:hover {
             transform: scale(1.05);
-            background: linear-gradient(45deg, #FFA防水, #FF8C00);
+            background: linear-gradient(45deg, #FFA500, #FF8C00);
         }
         .container {
             width: 100%;
@@ -155,6 +155,11 @@
             color: #E0E0E0;
             font-size: 0.9rem;
             outline: none;
+            appearance: auto;
+            -webkit-appearance: menulist;
+            -moz-appearance: menulist;
+            touch-action: manipulation;
+            z-index: 10;
         }
         .balance-row {
             display: flex;
@@ -583,7 +588,7 @@
                         <div class="action-box">
                             <h5>Stake / Unstake</h5>
                             <div class="select-box">
-                                <select id="stakeToken">
+                                <select id="stakeToken" aria-label="Select LP token to stake">
                                     ${stakeOptions}
                                 </select>
                             </div>
@@ -605,7 +610,7 @@
                             </div>
                             <button class="action-button" id="stakeButton" disabled>Stake</button>
                             <div class="select-box" style="margin-top: 10px;">
-                                <select id="unstakeSelect">
+                                <select id="unstakeSelect" aria-label="Select LP token to unstake">
                                     ${userStakesHtml}
                                 </select>
                             </div>
@@ -614,7 +619,7 @@
                         <div class="action-box">
                             <h5>Vote / Cancel</h5>
                             <div class="select-box">
-                                <select id="voteToken">
+                                <select id="voteToken" aria-label="Select node to vote">
                                     ${stakeOptions}
                                 </select>
                             </div>
@@ -635,7 +640,7 @@
                             </div>
                             <button class="action-button" id="voteButton" disabled>Vote</button>
                             <div class="select-box" style="margin-top: 10px;">
-                                <select id="cancelVoteToken">
+                                <select id="cancelVoteToken" aria-label="Select node to cancel vote">
                                     ${stakeOptions}
                                 </select>
                             </div>
@@ -708,8 +713,20 @@
             const voteToken = card.querySelector("#voteToken");
             const cancelVoteToken = card.querySelector("#cancelVoteToken");
 
-            stakeToken.addEventListener("change", () => updateLPBalance(card, contract));
-            cancelVoteToken.addEventListener("change", async () => {
+            const selects = [stakeToken, voteToken, cancelVoteToken];
+            selects.forEach(select => {
+                select.addEventListener("touchstart", (e) => {
+                    e.stopPropagation();
+                    select.focus();
+                });
+            });
+
+            stakeToken.addEventListener("change", (e) => {
+                e.stopPropagation();
+                updateLPBalance(card, contract);
+            });
+            cancelVoteToken.addEventListener("change", async (e) => {
+                e.stopPropagation();
                 const token = cancelVoteToken.value;
                 const votes = await contract.methods.userVotes(account, token).call();
                 cancelVoteButton.disabled = !account || parseFloat(web3.utils.fromWei(votes, "ether")) <= 0;
@@ -747,6 +764,166 @@
             stakeButton.addEventListener("click", async () => await stakeLP(card, contract));
             unstakeButton.addEventListener("click", async () => await unstakeLP(card, contract));
             voteButton.addEventListener("click", async () => await vote(card, contract));
+            cancelVoteButton.addEventListener("click", async () => await cancelVote(card, contract));
+            claimRewardsButton.addEventListener("click", async () => await claimRewards(card, contract));
+
+            voteInput.value = "1";
+            voteInput.dispatchEvent(new Event("input"));
+        }
+
+        async function setAmount(percentage, type, card) {
+            if (!web3 || !account) {
+                showStatus("Please connect wallet.", true);
+                return;
+            }
+            const input = card.querySelector(`#${type}Amount`);
+            let balance;
+            if (type === "stake") {
+                const token = card.querySelector("#stakeToken").value;
+                const tokenContract = new web3.eth.Contract(erc20Abi, token);
+                balance = parseFloat(web3.utils.fromWei(await tokenContract.methods.balanceOf(account).call(), "ether"));
+            } else {
+                balance = parseFloat(web3.utils.fromWei(card.dataset.tokenBalance, "ether"));
+            }
+            let amount = percentage === "100" ? balance : balance * (percentage / 100);
+            if (type === "vote") amount = Math.floor(amount);
+            if (type === "stake") {
+                const minStake = parseFloat(card.querySelector("#stakeToken").selectedOptions[0].dataset.minStake);
+                amount = Math.floor(amount / minStake) * minStake;
+            }
+            input.value = amount.toFixed(type === "vote" ? 0 : 2);
+            const button = card.querySelector(`#${type}Button`);
+            const minStake = type === "stake" ? parseFloat(card.querySelector(`#${type}Token`).selectedOptions[0].dataset.minStake) : 0;
+            button.disabled = !account || amount <= 0 || (type === "vote" && amount < 1) || (type === "stake" && amount < minStake);
+        }
+
+        async function stakeLP(card, contract) {
+            if (!web3 || !account) {
+                showStatus("Please connect wallet.", true);
+                return;
+            }
+            const token = card.querySelector("#stakeToken").value;
+            const amount = parseFloat(card.querySelector("#stakeAmount").value);
+            const minStake = parseFloat(card.querySelector("#stakeToken").selectedOptions[0].dataset.minStake);
+            if (isNaN(amount) || amount <= 0) {
+                showStatus("Please enter a valid amount.", true);
+                return;
+            }
+            if (amount < minStake) {
+                showStatus(`Amount must be at least ${minStake.toFixed(2)} LP tokens.`, true);
+                return;
+            }
+            const portions = Math.floor(amount / minStake);
+            if (amount % minStake !== 0) {
+                showStatus(`Warning: Only ${portions * minStake} LP will count toward rewards.`, true);
+                card.querySelector("#stakeNote").classList.add("warning");
+            } else {
+                card.querySelector("#stakeNote").classList.remove("warning");
+            }
+            let amountWei;
+            try {
+                amountWei = web3.utils.toWei(amount.toString(), "ether");
+            } catch {
+                showStatus("Invalid amount entered.", true);
+                return;
+            }
+            const tokenContract = new web3.eth.Contract(erc20Abi, token);
+            const balance = await tokenContract.methods.balanceOf(account).call();
+            if (web3.utils.toBN(balance).lt(web3.utils.toBN(amountWei))) {
+                showStatus("Insufficient LP token balance.", true);
+                return;
+            }
+            const isValid = await contract.methods.isValidLPToken(token).call();
+            if (!isValid) {
+                showStatus("Invalid LP token.", true);
+                return;
+            }
+            const allowance = await tokenContract.methods.allowance(account, contractAddress).call();
+            const button = card.querySelector("#stakeButton");
+            try {
+                button.classList.add("loading");
+                button.disabled = true;
+                if (web3.utils.toBN(allowance).lt(web3.utils.toBN(amountWei))) {
+                    showStatus("Approving LP token...");
+                    await tokenContract.methods.approve(contractAddress, maxAllowance).send({ from: account });
+                }
+                showStatus("Processing stake...");
+                await contract.methods.stakeLP(token, amountWei).send({ from: account });
+                showStatus("Stake successful!");
+                await loadActionCard();
+            } catch (e) {
+                const msg = e.code === 4001 ? "User rejected transaction." : e.message.includes("revert") ? "Transaction reverted." : e.message;
+                showStatus(`Stake failed: ${msg}`, true);
+            } finally {
+                button.classList.remove("loading");
+                button.disabled = false;
+            }
+        }
+
+        async function unstakeLP(card, contract) {
+            if (!web3 || !account) {
+                showStatus("Please connect wallet.", true);
+                return;
+            }
+            const token = card.querySelector("#unstakeSelect").value;
+            if (!token) {
+                showStatus("No stakes to unstake.", true);
+                return;
+            }
+            const button = card.querySelector("#unstakeButton");
+            try {
+                button.classList.add("loading");
+                button.disabled = true;
+                showStatus("Processing unstake...");
+                await contract.methods.unstakeLP(token).send({ from: account });
+                showStatus("Unstake successful!");
+                await loadActionCard();
+            } catch (e) {
+                const msg = e.code === 4001 ? "User rejected transaction." : e.message.includes("revert") ? "No staked LP tokens." : e.message;
+                showStatus(`Unstake failed: ${msg}`, true);
+            } finally {
+                button.classList.remove("loading");
+                button.disabled = false;
+            }
+        }
+
+        async function vote(card, contract) {
+            if (!web3 || !account) {
+                showStatus("Please connect wallet.", true);
+                return;
+            }
+            const token = card.querySelector("#voteToken").value;
+            const amount = parseFloat(card.querySelector("#voteAmount").value);
+            if (isNaN(amount) || amount < 1 || !Number.isInteger(amount)) {
+                showStatus("Enter a valid vote amount (minimum 1, whole number).", true);
+                return;
+            }
+            let amountWei;
+            try {
+                amountWei = web3.utils.toWei(amount.toString(), "ether");
+            } catch {
+                showStatus("Invalid amount entered.", true);
+                return;
+            }
+            const balance = await contract.methods.balanceOf(account).call();
+            if (web3.utils.toBN(balance).lt(web3.utils.toBN(amountWei))) {
+                showStatus("Insufficient BOOM balance.", true);
+                return;
+            }
+            const isValid = await contract.methods.isValidLPToken(token).call();
+            if (!isValid) {
+                showStatus("Invalid LP token.", true);
+                return;
+            }
+            const button = card.querySelector("#voteButton");
+            try {
+                button.classList.add("loading");
+                button.disabled = true;
+                showStatus("Processing vote...");
+                await contract.methods.vote(token, amountWei).send({ from: account });
+                showStatus("Vote successful!");
+                await loadActionCard();
+            } vote(card, contract));
             cancelVoteButton.addEventListener("click", async () => await cancelVote(card, contract));
             claimRewardsButton.addEventListener("click", async () => await claimRewards(card, contract));
 
